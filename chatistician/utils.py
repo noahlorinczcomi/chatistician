@@ -1,3 +1,5 @@
+import yaml
+
 # function to return unix color codes
 def colors(col):
     cols = [
