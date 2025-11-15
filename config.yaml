@@ -1,0 +1,14 @@
+server:
+  host: 192.168.12.179
+  port: 5001
+
+colors:
+  server: yellow
+  client: cyan
+
+breakers:
+  values: ['quit', 'exit', 'bye', 'close', 'end', 'stop', 'kill', 'leave']
+
+settings:
+  max_connections: 10
+  timeout: 30
