@@ -2,3 +2,4 @@
 
 # files
 secret_keys.txt
+*.pyc
