@@ -3,3 +3,5 @@
 # files
 secret_keys.txt
 *.pyc
+chatistician/config.yaml
+# config.yaml has server IPv4. omit for now

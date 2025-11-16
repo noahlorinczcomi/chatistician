@@ -7,8 +7,8 @@ import utils
 with open('config.yaml', 'r') as file:
     config = yaml.safe_load(file)
 
-HOST = config['server']['host'] # server IP
-PORT = config['server']['port'] # port server is listening on
+HOST = config['client']['host'] # server IP
+PORT = config['client']['port'] # port server is listening on
 
 # Create client socket
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
