@@ -4,7 +4,7 @@ import yaml
 import utils
 
 # socket config
-config_path = utils.resource_path('config.yaml')
+config_path = utils.resource_path('local_config.yaml')
 with open(config_path, 'r') as file:
     config = yaml.safe_load(file)
 

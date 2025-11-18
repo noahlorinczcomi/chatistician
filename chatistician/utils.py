@@ -1,4 +1,5 @@
 import yaml
+import os
 
 # function to return unix color codes
 def colors(col):
@@ -14,3 +15,12 @@ def colors(col):
     ]
     # \033[1;XXm # bold, not currently implemented
     return [x[1:] for x in cols if x[0] == col][0]
+
+# function to get abspaths when building executable with pyinstaller
+def resource_path(rel_path):
+    try:
+        # pyinstaller stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, rel_path)
