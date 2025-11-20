@@ -1,5 +1,6 @@
 import yaml
 import os
+import sys
 
 # function to return unix color codes
 def colors(col):
