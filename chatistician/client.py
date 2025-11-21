@@ -42,7 +42,7 @@ receive_thread = threading.Thread(
     args=(client, colored_server_name, colored_client_name, breakers)
 )
 send_thread = threading.Thread(
-    target=send_messages,
+    target=client_functions.send_messages,
     args=(client, colored_client_name, breakers)
 )
 
