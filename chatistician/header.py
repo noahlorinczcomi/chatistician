@@ -1,6 +1,11 @@
 # function to print intro
-def print_intro_message():
-    
+def masthead():
+    mh = """
+╔══════════════════════════════════════════════════════════════╗
+║           Chatistician: Rapid Statistical Consulting         ║
+╚══════════════════════════════════════════════════════════════╝
+    """
+    print(mh)
 
 # function to print section headers
 def print_section_header(title, size=78):

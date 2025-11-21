@@ -2,6 +2,9 @@ import socket
 import threading
 import yaml
 import utils
+import header
+
+header.masthead()
 
 # socket config
 config_path = utils.resource_path('config.yaml')
