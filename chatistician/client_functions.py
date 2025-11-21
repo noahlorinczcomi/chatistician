@@ -16,7 +16,6 @@ def receive_messages(
             # \r\033[K flushes
             print(f"\r\033[K{colored_server_name} {msg}")
             if msg.lower() in breakers:
-                client.close()
                 break
             print(f"{colored_client_name} ", end="", flush=True)  # Re-prompt
         except:
