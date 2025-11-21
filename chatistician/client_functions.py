@@ -31,10 +31,9 @@ def send_messages(
     while True:
         try:
             msg = input(f"{colored_client_name} ")
-            if msg.lower() in breakers:
-                client.close()
-                break
             client.sendall(msg.encode())
+            if msg.lower() in breakers:
+                break
         except Exception as e:
             print(f"Error: {e}")
             break
