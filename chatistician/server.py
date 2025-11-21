@@ -46,11 +46,11 @@ colored_server_name = f"{scolor[0]}[Chatistician]{scolor[1]}"
 
 # start receiving and sending threads
 receive_thread = threading.Thread(
-    target=receive_msg,
+    target=server_functions.receive_msg,
     args=(conn, colored_client_name, colored_server_name, breakers)
 )
 send_thread = threading.Thread(
-    target=send_msg,
+    target=server_functions.send_msg,
     args=(conn, colored_server_name, breakers)
 )
 
