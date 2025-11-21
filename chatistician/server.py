@@ -43,24 +43,18 @@ colored_server_name = f"{scolor[0]}[Chatistician]{scolor[1]}"
 def receive_msg():
     while True:
         try:
-            # receive message type
-            msg_type = conn.recv(1)
-            # if message is a file, receive it, otherwise print text
-            if msg_type == b'T':
-                data = conn.recv(1024)
-                if not data:
-                    print(f"\n{client_name} disconnected")
-                    break # out of while loop
-                msg = data.decode()
-                # flush line before receiving, then re-prompt
-                # \r\033[K flushes
-                print(f"\r\033[K{colored_client_name} {msg}")
-                print(f"{colored_server_name} ", end="", flush=True) # re-prompt
-                if msg.lower() in breakers:
-                    conn.close()
-                    break
-            elif msg_type == b'F':
-                receive_file(conn)
+            data = conn.recv(1024)
+            if not data:
+                print(f"\n{client_name} disconnected")
+                break # out of while loop
+            msg = data.decode()
+            # flush line before receiving, then re-prompt
+            # \r\033[K flushes
+            print(f"\r\033[K{colored_client_name} {msg}")
+            print(f"{colored_server_name} ", end="", flush=True) # re-prompt
+            if msg.lower() in breakers:
+                conn.close()
+                break
         except Exception as e:
             print(f"Error: {e}")
             break
