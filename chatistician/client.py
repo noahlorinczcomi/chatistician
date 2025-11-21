@@ -54,10 +54,21 @@ def send_messages():
     while True:
         try:
             msg = input(f"{colored_client_name} ")
-            client.sendall(msg.encode())
-            if msg.lower() in breakers:
+
+            # if sending a file
+            if msg.startswith(":upload"):
+                filepath = msg.split(" ", 1)[1].strip()
+                if os.path.exists(filepath):
+                    send_file(client, filepath)
+                else:
+                    print(f"File not found: {filepath}")
+            elif msg.lower() in breakers:
+                client.send(b'T') # send so server knows to expect text
                 client.close()
                 break
+            else:
+                client.send(b'T')  # send so server knows to expect text
+                client.sendall(msg.encode())
         except:
             break
 

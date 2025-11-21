@@ -31,7 +31,7 @@ def resource_path(rel_path):
 def send_file(client_socket, filepath):
     try:
         filename = os.path.basename(filepath)
-        file_size = os.path.getize(filepath)
+        file_size = os.path.getsize(filepath)
         print(f"Sending {filename} ({file_size/1e6}Mb)")
 
         # send message indicating file incoming
@@ -50,7 +50,7 @@ def send_file(client_socket, filepath):
                 if not chunk:
                     break
                 client_socket.sendall(chunk)
-                send += len(chunk)
+                sent += len(chunk)
                 # progress indicator
                 progress = 100 * (sent / file_size)
                 print(f"Progress: {progress:.1f}%", end="\r")
@@ -67,9 +67,9 @@ def send_file(client_socket, filepath):
 def receive_file(conn):
     try:
         # receive filename length, name, and size
-        filename_size = struct.unpack("I", conn.recv(4)[0])
+        filename_size = struct.unpack("I", conn.recv(4))[0]
         filename = conn.recv(filename_size).decode()
-        file_size = struct.unpack("Q", conn.recv(8)[0])
+        file_size = struct.unpack("Q", conn.recv(8))[0]
         print(f"Receiving file: {filename} ({file_size/1e6}Mb)")
 
         # receive file data in chunks
