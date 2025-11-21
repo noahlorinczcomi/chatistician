@@ -35,8 +35,6 @@ def send_messages(
             if msg.lower() in breakers:
                 client.close()
                 break
-            else:
-                client.sendall(msg.encode())
         except Exception as e:
             print(f"Error: {e}")
             break
