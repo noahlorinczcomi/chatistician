@@ -45,14 +45,15 @@ def send_file(client_socket, filepath):
         # send file data in chunks
         sent = 0
         with open(filepath, "rb") as f:
-            chunk = f.read(4096)
-            if not chunk:
-                break
-            client_socket.sendall(chunk)
-            send += len(chunk)
-            # progress indicator
-            progress = 100 * (sent / file_size)
-            print(f"Progress: {progress:.1f}%", end="\r")
+            while sent < file_size:
+                chunk = f.read(4096)
+                if not chunk:
+                    break
+                client_socket.sendall(chunk)
+                send += len(chunk)
+                # progress indicator
+                progress = 100 * (sent / file_size)
+                print(f"Progress: {progress:.1f}%", end="\r")
         print("File sent successfully")
 
         # wait for confirmation from server that it was received

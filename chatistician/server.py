@@ -59,7 +59,7 @@ def receive_msg():
                 if msg.lower() in breakers:
                     conn.close()
                     break
-            elif msg_type == b'F:
+            elif msg_type == b'F':
                 receive_file(conn)
         except Exception as e:
             print(f"Error: {e}")
