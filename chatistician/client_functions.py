@@ -15,10 +15,10 @@ def receive_messages(
             # flush line before receiving, then re-prompt
             # \r\033[K flushes
             print(f"\r\033[K{colored_server_name} {msg}")
-            print(f"{colored_client_name} ", end="", flush=True)  # Re-prompt
             if msg.lower() in breakers:
                 client.close()
                 break
+            print(f"{colored_client_name} ", end="", flush=True)  # Re-prompt
         except:
             break
 
@@ -31,10 +31,10 @@ def send_messages(
     while True:
         try:
             msg = input(f"{colored_client_name} ")
-            client.sendall(msg.encode())
             if msg.lower() in breakers:
                 client.close()
                 break
+            client.sendall(msg.encode())
         except Exception as e:
             print(f"Error: {e}")
             break
