@@ -2,6 +2,7 @@ import socket
 import threading
 import yaml
 import utils
+import client_functions
 import header
 
 header.masthead()
@@ -35,41 +36,15 @@ ccolor = utils.colors(config['colors']['client'])
 colored_client_name = f"{ccolor[0]}[{name}]{ccolor[1]}"
 colored_server_name = f"{scolor[0]}[Chatistician]{scolor[1]}"
 
-def receive_messages():
-    while True:
-        try:
-            data = client.recv(1024)
-            if not data:
-                print("\nServer disconnected")
-                break
-            msg = data.decode()
-            # flush line before receiving, then re-prompt
-            # \r\033[K flushes
-            print(f"\r\033[K{colored_server_name} {msg}")
-            print(f"{colored_client_name} ", end="", flush=True)  # Re-prompt
-            if msg.lower() in breakers:
-                client.close()
-                break
-        except:
-            break
-
-def send_messages():
-    while True:
-        try:
-            msg = input(f"{colored_client_name} ")
-            client.sendall(msg.encode())
-            if msg.lower() in breakers:
-                client.close()
-                break
-            else:
-                client.sendall(msg.encode())
-        except Exception as e:
-            print(f"Error: {e}")
-            break
-
 # start receiving and sending threads
-receive_thread = threading.Thread(target=receive_messages)
-send_thread = threading.Thread(target=send_messages)
+receive_thread = threading.Thread(
+    target=client_functions.receive_messages,
+    args=(client, colored_server_name, colored_client_name, breakers)
+)
+send_thread = threading.Thread(
+    target=send_messages,
+    args=(client, colored_client_name, breakers)
+)
 
 receive_thread.start()
 send_thread.start()

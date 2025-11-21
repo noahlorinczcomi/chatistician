@@ -1,14 +1,9 @@
-# Bytes vs Strings: Sockets send/receive bytes (b"..."), so we use .decode() to convert to strings
-# Blocking calls: accept(), recv(), and connect() pause execution until they complete
-# Two sockets on server: One listens for connections (server), one handles each client (conn)
-# Order matters: Server must be running and listening before client tries to connect
-
 import socket
 import threading
 import yaml
 import utils
-import header
 import server_functions
+import header
 
 header.masthead()
 
