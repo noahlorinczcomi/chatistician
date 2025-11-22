@@ -3,6 +3,6 @@ pyinstaller \
     --onefile \
     --icon="../icons/AppIcon.icns" \
     --name Chatv0 \
-    --add-data "local_config.yaml:." \
+    --add-data "config.yaml:." \
     --add-data "utils.py:." \
-    local_client.py
+    client.py

@@ -29,7 +29,7 @@ print(f"Connected by {addr}")
 # ask for name and receive response
 conn.sendall(b"Name: ")
 client_name = conn.recv(1024).decode()
-print(f"{client_name} has joined the chat")
+header.welcome(client_name)
 
 # defining breaking criteria
 breakers = config['breakers']['values']
