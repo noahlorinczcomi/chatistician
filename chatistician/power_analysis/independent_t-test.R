@@ -1,7 +1,7 @@
 library(optparse)
 optlist = list(
-    make_option('--sample-size-1', type='integer', help='Sample size in group 1'),
-    make_option('--sample-size-2', type='integer', help='Sample size in group 2'),
+    make_option('--n1', type='integer', help='Sample size in group 1'),
+    make_option('--n2', type='integer', help='Sample size in group 2'),
     make_option('--type-1', type='numeric', default=0.05, help='Type 1 error / significance threshold'),
     make_option('--variance-1', type='numeric', default=1, help='Variance in group 1'),
     make_option('--variance-2', type='numeric', default=1, help='Variance in group 2'),
@@ -14,8 +14,8 @@ opts = parse_args(OptionParser(option_list=optlist))
 k = opts$`number-simulations`
 ds = c(0.1, 0.3, 0.5, 0.7, 0.9)
 alpha = opts$`type-1`
-n1 = opts$`sample-size-1`
-n2 = opts$`sample-size-2`
+n1 = opts$n1
+n2 = opts$n2
 
 sigma2_1 = opts$`variance-1`
 sigma2_2 = opts$`variance-2`

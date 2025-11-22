@@ -2,7 +2,7 @@ library(optparse)
 library(MASS)
 
 optlist = list(
-    make_option('--sample-size', type='integer', help='Sample size'),
+    make_option('-n', type='integer', help='Sample size'),
     make_option('--type-1', type='numeric', default=0.05, help='Type 1 error / significance threshold'),
     make_option('--variance-pre', type='numeric', default=1, help='Variance in pre-treatment condition'),
     make_option('--variance-post', type='numeric', default=1, help='Variance in post-treatment condition'),
@@ -16,7 +16,7 @@ opts = parse_args(OptionParser(option_list=optlist))
 k = opts$`number-simulations`
 ds = c(0.1, 0.3, 0.5, 0.7, 0.9)
 alpha = opts$`type-1`
-n = opts$`sample-size`
+n = opts$n
 variance_pre = opts$`variance-pre`
 variance_post = opts$`variance-post`
 rho = opts$correlation
