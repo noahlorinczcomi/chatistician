@@ -3,9 +3,9 @@ import threading
 import yaml
 import utils
 import client_functions
-import header
+import headers
 
-header.masthead()
+headers.masthead()
 
 # socket config
 config_path = utils.resource_path('config.yaml')
@@ -26,7 +26,7 @@ name_prompt = client.recv(1024).decode()
 print(name_prompt, end="")
 name = input()
 client.sendall(name.encode())
-header.welcome(name)
+headers.welcome(name)
 
 # defining breaking criteria
 breakers = config['breakers']['values']

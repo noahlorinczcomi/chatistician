@@ -46,7 +46,7 @@ def match_sim_to_script(sim_name):
     script = f"simulation type not found. Options are: {', '.join(available_scripts)}"
     if is_ttest and not is_paired:
         script = 'independent_t-test.R'
-    elif is_ttest and is_paird:
+    elif is_ttest and is_paired:
         script = 'paired_t-test.R'
     return script
 

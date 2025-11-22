@@ -3,9 +3,9 @@ import threading
 import yaml
 import utils
 import server_functions
-import header
+import headers
 
-header.masthead()
+headers.masthead()
 
 # socket config
 with open('config.yaml', 'r') as file:
