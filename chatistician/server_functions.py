@@ -1,3 +1,5 @@
+import os
+import subprocess
 
 # receive message
 def receive_msg(
@@ -25,17 +27,32 @@ def receive_msg(
             break
 
 # function to run simulation (R script) from within chat
-def run_simulation(script, **kwargs):
-    cmd = [
-        f"Rscript {script} {kwargs}"
-    ]
-    subprocess.run(cmd)
+def run_simulation(script, args):
+    cmd = f"Rscript {script} {args}"
+    print(cmd)
+    subprocess.run(cmd, shell=True)
+
+# function to read simulation description and return R script name
+def match_sim_to_script(sim_name):
+    sim_name = sim_name.lower()
+    # T-tests
+    ttest_subs = ['t-test', 't test']
+    is_ttest = any(s in sim_name for s in ttest_subs)
+    paired_subs = ['paired', 'pair', 'repeated', 'matched']
+    is_paired = any(s in sim_name for s in paired_subs)
+    
+    # other simulation types ...
+    available_scripts = os.listdir('power_analysis')
+    script = f"simulation type not found. Options are: {', '.join(available_scripts)}"
+    if is_ttest and not is_paired:
+        script = 'independent_t-test.R'
+    elif is_ttest and is_paird:
+        script = 'paired_t-test.R'
+    return script
 
 # function to parse messages before sending/running
-def server_msg_parser(
-    conn,
+def parse_msg(
     msg,
-    colored_server_name,
     cmd_prefix='$',
     sim_commands=['simulate', 'simulation'],
     file_commands=['get', 'download']
@@ -45,19 +62,32 @@ def server_msg_parser(
     will be chats, and others will be commands to
     execute other commands/files. I want to make sure
     I know what type of information the message intends
-    to send before sending
+    to send before sending. This function returns the
+    parsed message and its type. It does not actually
+    send the message or execute any commands
     """
     if msg[0] != cmd_prefix:
-        send_msg(conn, name, breakers)
-    elif msg[0] in sim_commands:
+        parsed = {'message_type': 'chat', 'message': msg}
+    # then user wants to run a command
+    elif msg.split(" ")[1].lower() in sim_commands:
         # else, user wants to perform a simulation. The
         # message itself will contain the simulation
         # parameters if they want to perform a simulation
-        kwargs = " ".join(msg.split()[3:])
-        run_simulation(script, kwargs)
-    elif msg[0] in file_commands:
-        # don't have a solution for this yet
-        pass
+        script_start = msg.index('{') + 1
+        script_end = msg.index('}')
+        sim_type = msg[script_start:script_end]
+        script = match_sim_to_script(sim_type)
+        args = msg[(script_end + 2):]
+        parsed = {
+            'message_type': 'simulation',
+            'script': f"power_analysis/{script}",
+            'args': args
+        }
+    elif msg.split(" ")[1].lower() in file_commands:
+        print('file sharing not implemented yet')
+        parsed = {}
+    
+    return parsed
 
 # send message
 def send_msg(
@@ -68,12 +98,15 @@ def send_msg(
     while True:
         try:
             msg = input(f"{colored_server_name} ")
+            parsed_msg = parse_msg(msg)
             # make sure we know what message is trying to sent
-            server_msg_parser(
-                conn,
-                msg,
-                colored_server_name
-            ) 
+            if parsed_msg['message_type'] == 'chat':
+                conn.sendall(msg.encode())
+            elif parsed_msg['message_type'] == 'simulation':
+                run_simulation(
+                    script=parsed_msg['script'],
+                    args=parsed_msg['args']
+                )
             #conn.sendall(msg.encode())
             if msg.lower() in breakers:
                 conn.close()
