@@ -73,10 +73,8 @@ def send_msg(
                 conn,
                 msg,
                 colored_server_name
-            )
-            # check if message is for an R script
-            if msg[0] == ':' and 
-            conn.sendall(msg.encode())
+            ) 
+            #conn.sendall(msg.encode())
             if msg.lower() in breakers:
                 conn.close()
                 break
