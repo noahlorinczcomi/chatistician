@@ -2,7 +2,7 @@
 def masthead():
     mh = """
 ╔══════════════════════════════════════════════════════════════╗
-║           Chatistician: Rapid Statistical Consulting         ║
+║           Chatistician: Quick Statistical Consult            ║
 ╚══════════════════════════════════════════════════════════════╝
     """
     print(mh)

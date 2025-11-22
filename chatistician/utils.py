@@ -2,6 +2,7 @@ import yaml
 import os
 import struct
 import sys
+import subprocess
 
 # function to return unix color codes
 def colors(col):
