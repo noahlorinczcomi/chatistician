@@ -107,6 +107,7 @@ def send_msg(
                     script=parsed_msg['script'],
                     args=parsed_msg['args']
                 )
+                print(sim_result)
                 conn.sendall(sim_result.encode())
             #conn.sendall(msg.encode())
             if msg.lower() in breakers:

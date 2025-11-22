@@ -44,6 +44,7 @@ pad_message=function(message, l) {
     cat('| ', message, rep(' ', pad), '|\n', sep='')
 }
 l = 40
+cat('\n')
 cat('|', rep('=', l - 2), '|\n', sep='')
 pad_message('Paired samples T-test power analysis', l)
 cat('|', rep('=', l - 2), '|\n', sep='')

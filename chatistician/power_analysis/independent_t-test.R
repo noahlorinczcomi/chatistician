@@ -40,6 +40,7 @@ pad_message=function(message, l) {
     pad = l - nchar(message) - 3
     cat('| ', message, rep(' ', pad), '|\n', sep='')
 }
+cat('\n')
 cat('|', rep('=', l - 2), '|\n', sep='')
 pad_message('Independent T-test power analysis', l)
 cat('|', rep('=', l - 2), '|\n', sep='')
