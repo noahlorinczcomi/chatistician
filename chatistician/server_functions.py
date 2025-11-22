@@ -66,7 +66,7 @@ def parse_msg(
     parsed message and its type. It does not actually
     send the message or execute any commands
     """
-    if msg[0] != cmd_prefix:
+    if (len(msg)==0) or (msg[0] != cmd_prefix):
         parsed = {'message_type': 'chat', 'message': msg}
     # then user wants to run a command
     elif msg.split(" ")[1].lower() in sim_commands:
