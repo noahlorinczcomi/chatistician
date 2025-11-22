@@ -30,7 +30,8 @@ def receive_msg(
 def run_simulation(script, args):
     cmd = f"Rscript {script} {args}"
     print(cmd)
-    subprocess.run(cmd, shell=True)
+    run =subprocess.run(cmd, shell=True, capture_output=True, text=True)
+    return run.stdout
 
 # function to read simulation description and return R script name
 def match_sim_to_script(sim_name):
