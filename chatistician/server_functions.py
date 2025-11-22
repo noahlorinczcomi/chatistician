@@ -103,10 +103,11 @@ def send_msg(
             if parsed_msg['message_type'] == 'chat':
                 conn.sendall(msg.encode())
             elif parsed_msg['message_type'] == 'simulation':
-                run_simulation(
+                sim_result = run_simulation(
                     script=parsed_msg['script'],
                     args=parsed_msg['args']
                 )
+                conn.sendall(sim_result.encode())
             #conn.sendall(msg.encode())
             if msg.lower() in breakers:
                 conn.close()

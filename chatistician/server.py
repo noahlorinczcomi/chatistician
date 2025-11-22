@@ -27,7 +27,6 @@ conn, addr = server.accept()
 # ask for name and receive response
 conn.sendall(b"Name: ")
 client_name = conn.recv(1024).decode()
-header.welcome(client_name)
 
 # defining breaking criteria
 breakers = config['breakers']['values']
