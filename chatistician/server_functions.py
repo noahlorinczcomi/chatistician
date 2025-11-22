@@ -29,8 +29,7 @@ def receive_msg(
 # function to run simulation (R script) from within chat
 def run_simulation(script, args):
     cmd = f"Rscript {script} {args}"
-    print(cmd)
-    run =subprocess.run(cmd, shell=True, capture_output=True, text=True)
+    run = subprocess.run(cmd, shell=True, capture_output=True, text=True)
     return run.stdout
 
 # function to read simulation description and return R script name

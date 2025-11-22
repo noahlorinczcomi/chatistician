@@ -25,14 +25,10 @@ R = matrix(c(1, rho, rho, 1), 2, 2)
 Sigma = D %*% R %*% D
 
 l = 40
-pb = txtProgressBar(min=0, max=length(ds) * k, style=3, width=l)
-s = 0
 results = c()
 for(i in 1:length(ds)) {
     r = c()
     for(iter in 1:k) {
-        # print progress
-        s = s + 1
         setTxtProgressBar(pb, s)
         # draw raw data
         X = MASS::mvrnorm(n, c(0, ds[i]), Sigma)
@@ -41,9 +37,6 @@ for(i in 1:length(ds)) {
     }
     results[i] = mean(r)
 }
-
-close(pb)
-cat('\n')
 
 # clean results
 pad_message=function(message, l) {

@@ -21,15 +21,10 @@ sigma2_1 = opts$`variance-1`
 sigma2_2 = opts$`variance-2`
 
 l = 40
-pb = txtProgressBar(min=0, max=length(ds) * k, style=3, width=l)
-s = 0
 results = c()
 for(i in 1:length(ds)) {
     r = c()
     for(iter in 1:k) {
-        # print progress
-        s = s + 1
-        setTxtProgressBar(pb, s)
         # draw raw data
         x1 = rnorm(n1, 0, sqrt(sigma2_1))
         x2 = rnorm(n2, ds[i], sqrt(sigma2_2))
@@ -39,9 +34,6 @@ for(i in 1:length(ds)) {
     }
     results[i] = mean(r)
 }
-
-close(pb)
-cat('\n')
 
 # clean results
 pad_message=function(message, l) {
