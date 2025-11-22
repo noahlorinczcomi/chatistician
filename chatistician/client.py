@@ -26,7 +26,7 @@ name_prompt = client.recv(1024).decode()
 print(name_prompt, end="")
 name = input()
 client.sendall(name.encode())
-header.welcome(client_name)
+header.welcome(name)
 
 # defining breaking criteria
 breakers = config['breakers']['values']
