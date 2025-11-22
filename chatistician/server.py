@@ -20,11 +20,9 @@ server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind((HOST, PORT))
 server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # let us reuse the port immediately
 server.listen(int(config['settings']['max_connections']))
-print(f"Server listening on {HOST}:{PORT}")
 
 # connect server socket to HOST:PORT
 conn, addr = server.accept()
-print(f"Connected by {addr}")
 
 # ask for name and receive response
 conn.sendall(b"Name: ")

@@ -20,7 +20,6 @@ client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # connect socket to HOST:PORT
 client.connect((HOST, PORT))
-print(f"Connected to {HOST}:{PORT}")
 
 # receive name prompt from server.py and enter name
 name_prompt = client.recv(1024).decode()
