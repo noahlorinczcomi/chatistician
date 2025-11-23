@@ -1,6 +1,5 @@
 import os
 import subprocess
-from blessed import Terminal
 
 def get_terminal_height():
     return os.get_terminal_size().lines
