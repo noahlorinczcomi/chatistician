@@ -36,7 +36,7 @@ def run_simulation(script, args):
 def match_sim_to_script(sim_name):
     sim_name = sim_name.lower()
     # T-tests
-    ttest_subs = ['t-test', 't test']
+    ttest_subs = ['t-test', 't test', ' t']
     is_ttest = any(s in sim_name for s in ttest_subs)
     paired_subs = ['paired', 'pair', 'repeated', 'matched']
     is_paired = any(s in sim_name for s in paired_subs)
@@ -53,7 +53,7 @@ def match_sim_to_script(sim_name):
 # function to parse messages before sending/running
 def parse_msg(
     msg,
-    cmd_prefix='$',
+    cmd_prefix='!',
     sim_commands=['simulate', 'simulation'],
     file_commands=['get', 'download']
 ):
@@ -66,10 +66,14 @@ def parse_msg(
     parsed message and its type. It does not actually
     send the message or execute any commands
     """
-    if (len(msg)==0) or (msg[0] != cmd_prefix):
+    is_cmd = msg[0] == cmd_prefix
+    prefix = msg.split(" ")[0].lower()
+    is_sim = prefix[1:] in sim_commands
+    is_file = prefix[1:] in file_commands
+    if len(msg) == 0 or not is_cmd:
         parsed = {'message_type': 'chat', 'message': msg}
     # then user wants to run a command
-    elif msg.split(" ")[1].lower() in sim_commands:
+    elif is_cmd and is_sim:
         # else, user wants to perform a simulation. The
         # message itself will contain the simulation
         # parameters if they want to perform a simulation
@@ -83,10 +87,19 @@ def parse_msg(
             'script': f"power_analysis/{script}",
             'args': args
         }
-    elif msg.split(" ")[1].lower() in file_commands:
+        # make sure the expert didn't just want to see the
+        # flags/arguments/params of the simulation function
+        if msg.split(" ")[1].lower() in ['params', 'parameters']:
+            parsed['args'] = '--help' # replaces
+    elif is_cmd and is_file:
         print('file sharing not implemented yet')
         parsed = {}
-    
+    else:
+        # not a chat, not a sim or file command, so just
+        # return exact message with a prefix that it was
+        # command-ambiguous
+        new_msg = f"[COMMAND-AMBIGUOUS] {msg}"
+        parsed = {'message_type': 'chat', 'message': new_msg}
     return parsed
 
 # send message

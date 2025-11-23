@@ -2,7 +2,7 @@ library(optparse)
 library(MASS)
 
 optlist = list(
-    make_option('-n', type='integer', help='Sample size'),
+    make_option(c('-n', '--n'), type='integer', help='Sample size'),
     make_option('--type-1', type='numeric', default=0.05, help='Type 1 error / significance threshold'),
     make_option('--variance-pre', type='numeric', default=1, help='Variance in pre-treatment condition'),
     make_option('--variance-post', type='numeric', default=1, help='Variance in post-treatment condition'),
