@@ -3,10 +3,8 @@ import threading
 import yaml
 import utils
 import client_functions
-import headers
-import random
 
-headers.masthead()
+utils.masthead()
 
 # socket config
 config_path = utils.resource_path('config.yaml')
@@ -23,7 +21,7 @@ client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect((HOST, PORT))
 name = client_functions.assign_client_id()
 client.sendall(name.encode())
-headers.welcome(name)
+utils.welcome(name)
 
 # defining breaking criteria
 breakers = config['breakers']['values']

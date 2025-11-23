@@ -11,7 +11,7 @@ def assign_client_id():
     id = "".join([
         str(random.randint(0, 10)) for i in range(0, 4)
     ])
-    return "".join([today, id])
+    return "".join(['User', today, id])
 
 # receive messages
 def receive_messages(
@@ -30,6 +30,7 @@ def receive_messages(
             # flush line before receiving, then re-prompt
             # \r\033[K flushes
             print(f"\r\033[K{colored_server_name} {msg}")
+            print("\r\033[K hi")
             if msg.lower() in breakers:
                 client.close()
                 break
@@ -51,3 +52,6 @@ def send_messages(
                 break
         except Exception as e:
             break
+
+# footer of instructions at bottom of client-side chat log
+def footer():
