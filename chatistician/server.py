@@ -21,11 +21,8 @@ server.bind((HOST, PORT))
 server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # let us reuse the port immediately
 server.listen(int(config['settings']['max_connections']))
 
-# connect server socket to HOST:PORT
+# connect server socket to HOST:PORT and receive client ID
 conn, addr = server.accept()
-
-# ask for name and receive response
-conn.sendall(b"Name: ")
 client_name = conn.recv(1024).decode()
 
 # defining breaking criteria

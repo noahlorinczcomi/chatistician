@@ -4,6 +4,7 @@ import yaml
 import utils
 import client_functions
 import headers
+import random
 
 headers.masthead()
 
@@ -20,11 +21,7 @@ client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # connect socket to HOST:PORT
 client.connect((HOST, PORT))
-
-# receive name prompt from server.py and enter name
-name_prompt = client.recv(1024).decode()
-print(name_prompt, end="")
-name = input()
+name = client_functions.assign_client_id()
 client.sendall(name.encode())
 headers.welcome(name)
 
