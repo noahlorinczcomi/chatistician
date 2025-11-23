@@ -1,5 +1,18 @@
 import os
 import subprocess
+from blessed import Terminal
+
+def get_terminal_height():
+    return os.get_terminal_size().lines
+
+def draw_footer(session_info="example footer"):
+    """Draw footer at bottom of terminal"""
+    # Save cursor position, move to bottom, draw footer, restore cursor
+    footer_text = f"Session: {session_info}"
+    print(f"\033[s", end="")  # Save cursor position
+    print(f"\033[{get_terminal_height()};0H", end="")  # Move to bottom row
+    print(f"\033[K{footer_text}", end="")  # Clear line and print footer
+    print(f"\033[u", end="", flush=True)  # Restore cursor position
 
 # receive message
 def receive_msg(
@@ -15,10 +28,13 @@ def receive_msg(
                 print(f"\n{colored_client_name} disconnected")
                 break # out of while loop
             msg = data.decode()
-            # flush line before receiving, then re-prompt
-            # \r\033[K flushes
+            # flush line before receiving
             print(f"\r\033[K{colored_client_name} {msg}")
-            print(f"{colored_server_name} ", end="", flush=True) # re-prompt
+            
+            draw_footer()
+
+            # re-prompt for client
+            print(f"{colored_server_name} ", end="", flush=True)
             if msg.lower() in breakers:
                 conn.close()
                 break
@@ -128,3 +144,10 @@ def send_msg(
                 break
         except:
             break
+
+def draw_footer(session_info='example footer'):
+    # Always draw footer at bottom
+    term = Terminal()
+    print(term.move(term.height - 1, 0) + term.black_on_white(
+        f"Session: {session_info['id']} | Status: Connected".ljust(term.width)
+    ))

@@ -30,7 +30,6 @@ def receive_messages(
             # flush line before receiving, then re-prompt
             # \r\033[K flushes
             print(f"\r\033[K{colored_server_name} {msg}")
-            print("\r\033[K hi")
             if msg.lower() in breakers:
                 client.close()
                 break
@@ -55,3 +54,4 @@ def send_messages(
 
 # footer of instructions at bottom of client-side chat log
 def footer():
+    return None
