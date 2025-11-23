@@ -143,10 +143,3 @@ def send_msg(
                 break
         except:
             break
-
-def draw_footer(session_info='example footer'):
-    # Always draw footer at bottom
-    term = Terminal()
-    print(term.move(term.height - 1, 0) + term.black_on_white(
-        f"Session: {session_info['id']} | Status: Connected".ljust(term.width)
-    ))
