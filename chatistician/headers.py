@@ -10,7 +10,7 @@ def masthead():
 # header for server side. reminder of simulations etc.
 def server_header():
     header = """
-    ===== SIMULATIONS ==================================================
+    [+ === SIMULATIONS ================================================ +]
       [RUN]
         [format]   !simulate {<simulation type>} <parameters>
         [example]  !simulate {independent t test} --n1 10 --n2 30
@@ -24,26 +24,31 @@ def server_header():
         [example]  !simulate params {independent t test}
         [example]  !simulate params {paired t test}
 
-    ===== CODE ==========================================================
+
+    [+ === CODE ======================================================= +]
       [REVIEW]
         [format]   !review code <file_name.extentsion>
         [example]  !review code analysis.R
         [example]  !review code latest
+    
     """
     print(header)
 
 # client header
 def client_header():
     header = """
-    ===== SIMULATIONS ==================================================
+    [+ === SIMULATIONS =============================================== +]
       [REQUEST]
         "independent t test"
         "paired t test"
+    
 
-    ===== CODE ==========================================================
+
+    [+ === CODE ====================================================== +]
       [REVIEW] (you must add the ":")
         [format]   !review code <file_name.extension>
         [example]  !review code analysis.R
+    
     """
     print(header)
 
