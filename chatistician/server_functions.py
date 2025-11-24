@@ -9,7 +9,6 @@ def receive_msg(
     colored_server_name,
     breakers
 ):
-    utils.server_header()
     while True:
         try:
             data = conn.recv(1024)
@@ -115,7 +114,8 @@ def parse_msg(
         return None
 
     if is_editor:
-        subprocess.run(msg, text=True, shell=True)
+        # msg[1:] takes off the cmd_prefix (e.g., '!')
+        subprocess.run(msg[1:], text=True, shell=True)
     
     # if mdae it this far, not a chat, not a sim or
     # file command, so just return exact message with 

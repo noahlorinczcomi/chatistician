@@ -22,7 +22,8 @@ server.listen(int(config['settings']['max_connections']))
 print("Waiting for client")
 conn, addr = server.accept()
 client_name = conn.recv(1024).decode()
-print(f"User {client_name} connected")
+print(f"{client_name} connected")
+print(r"Type \"!help\" anytime to privately view full functionality")
 
 # defining breaking criteria
 breakers = config['breakers']['values']
