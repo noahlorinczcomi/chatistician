@@ -61,7 +61,8 @@ def parse_msg(
     cmd_prefix='!',
     sim_commands=['simulate', 'simulation'],
     file_commands=['get', 'download'],
-    help_commands=['help', 'help me']
+    help_commands=['help', 'help me'],
+    editor_commands=['micro', 'nano', 'vim']
 ):
     """
     The idea is that some messages from the server 
@@ -80,6 +81,7 @@ def parse_msg(
     is_sim = prefix[1:] in sim_commands
     is_file = prefix[1:] in file_commands
     is_help = prefix[1:] in help_commands
+    is_editor = prefix[1:] in editor_commands
 
     # then user wants to run a command
     if not is_cmd:
@@ -111,6 +113,9 @@ def parse_msg(
     if is_help:
         utils.server_header()
         return None
+
+    if is_editor:
+        subprocess.run(msg, text=True, shell=True)
     
     # if mdae it this far, not a chat, not a sim or
     # file command, so just return exact message with 

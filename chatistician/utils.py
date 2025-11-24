@@ -25,15 +25,15 @@ def resource_path(rel_path):
         base_path = os.path.abspath(".")
     return os.path.join(base_path, rel_path)
 
-# function to print masthead/banner
-def masthead():
-    mh = r"""
+# function to print banner
+def banner():
+    ban = r"""
    ___ _  _   _ _____   ___ _____ _ _____ ___ 
   / __| || | /_\_   _| / __|_   _/_\_   _/ __|
  | (__| __ |/ _ \| |   \__ \ | |/ _ \| | \__ \
   \___|_||_/_/ \_\_|   |___/ |_/_/ \_\_| |___/                           
     """
-    print(mh)
+    print(ban)
 
 # header for server side. reminder of simulations etc.
 def server_header():
@@ -55,11 +55,11 @@ def server_header():
 
     <-- CODE -------------------------------------------------------->
       + REVIEW
-        > format  :  !code review <file_name.extentsion>
+        > format  :  !code review <file.extension>
         > example :  "!code review analysis.R"
         > example :  "!code review latest"
       + WRITING
-        > format  :  !code write <file_name.extension>
+        > format  :  !code write <file.extension>
         > example :  !code write mixed_model.R
     
     <-- HELP -------------------------------------------------------->
@@ -70,16 +70,19 @@ def server_header():
 # client header
 def client_header():
     header = """
-    [+ SIMULATIONS =============================================== +]
-       [REQUEST]
-          "independent t test"
-          "paired t test"
+    Need help with:
+    - Power calculation? Just say: "I need a power calculation"
+    - Code review? Ask: "Can we review/write my data analysis code?"
+    - Data analysis? Ask: "Can you review my analysis?"
+    - Study design? Ask: "Help me design my study"
 
-    [+ CODE ====================================================== +]
-       [REVIEW] (you must add the ":")
-         [format]   !review code <file_name.extension>
-         [example]  !review code analysis.R
+    <-- HOW TO REQUEST CODE REVIEW --------------------------------------->
+      [Example] : Type into chat: "!code review analysis.R"
+      [Format]  : "!code review </local/file.extension>"
     
+    Type "quit" to end session.
+
+    Type "!help" to view this message (only visible to you).
     """
     print(header)
 
@@ -89,13 +92,5 @@ def welcome(name):
     Welcome, {name}!
     
     You're connected with a professional statistician.
-    
-    Need help with:
-    - Power calculation? Just say: "I need a power calculation"
-    - Code review? Ask: "Can we review/write my data analysis code?"
-    - Data analysis? Ask: "Can you review my analysis?"
-    - Study design? Ask: "Help me design my study"
-    
-    Type 'quit' to end session.
     """
     print(welcome_msg)

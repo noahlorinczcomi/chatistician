@@ -4,7 +4,7 @@ import yaml
 import utils
 import client_functions
 
-utils.masthead()
+utils.banner()
 
 # socket config
 config_path = utils.resource_path('config.yaml')

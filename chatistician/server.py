@@ -4,8 +4,6 @@ import yaml
 import utils
 import server_functions
 
-utils.masthead()
-
 # socket config
 with open('config.yaml', 'r') as file:
     config = yaml.safe_load(file)
@@ -21,8 +19,10 @@ server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # let us reuse the
 server.listen(int(config['settings']['max_connections']))
 
 # connect server socket to HOST:PORT and receive client ID
+print("Waiting for client")
 conn, addr = server.accept()
 client_name = conn.recv(1024).decode()
+print(f"User {client_name} connected")
 
 # defining breaking criteria
 breakers = config['breakers']['values']
