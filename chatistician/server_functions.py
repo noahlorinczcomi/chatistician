@@ -19,7 +19,7 @@ def receive_msg(
     colored_server_name,
     breakers
 ):
-    draw_footer(session_info)
+    draw_footer()
     while True:
         try:
             data = conn.recv(1024)
