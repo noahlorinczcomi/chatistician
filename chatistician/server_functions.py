@@ -1,7 +1,7 @@
 import os
 import subprocess
 
-def print_header(session_info="example header"):
+def server_header(session_info="example header"):
     """Print header at top (only call once at start)"""
     os.system('clear')  # or 'cls' on Windows
     print("=" * 50)
@@ -16,7 +16,7 @@ def receive_msg(
     colored_server_name,
     breakers
 ):
-    print_header()
+    server_header()
     while True:
         try:
             data = conn.recv(1024)
@@ -78,13 +78,18 @@ def parse_msg(
     parsed message and its type. It does not actually
     send the message or execute any commands
     """
+    if len(msg) == 0:
+        parsed = {'message_type': 'chat', 'message': msg}
+        return parsed
+
     is_cmd = msg[0] == cmd_prefix
     prefix = msg.split(" ")[0].lower()
     is_sim = prefix[1:] in sim_commands
     is_file = prefix[1:] in file_commands
-    if len(msg) == 0 or not is_cmd:
-        parsed = {'message_type': 'chat', 'message': msg}
+    
     # then user wants to run a command
+    if is_cmd:
+        parsed = {'message_type': 'chat', 'message': msg}
     elif is_cmd and is_sim:
         # else, user wants to perform a simulation. The
         # message itself will contain the simulation
@@ -122,7 +127,10 @@ def send_msg(
 ):
     while True:
         try:
-            msg = input(f"{colored_server_name} ")
+            msg = input(f"{colored_server_name}")
+            if msg == "":
+                conn.sendall(msg.encode())
+                continue
             parsed_msg = parse_msg(msg)
             # make sure we know what message is trying to sent
             if parsed_msg['message_type'] == 'chat':
