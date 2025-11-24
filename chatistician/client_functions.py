@@ -30,6 +30,7 @@ def receive_messages(
             # flush line before receiving, then re-prompt
             # \r\033[K flushes
             print(f"\r\033[K{colored_server_name} {msg}")
+            
             if msg.lower() in breakers:
                 client.close()
                 break
