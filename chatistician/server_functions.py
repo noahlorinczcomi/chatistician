@@ -1,13 +1,6 @@
 import os
 import subprocess
-
-def server_header(session_info="example header"):
-    """Print header at top (only call once at start)"""
-    os.system('clear')  # or 'cls' on Windows
-    print("=" * 50)
-    print(f"Session: {session_info}")
-    print("=" * 50)
-    print()  # Blank line after header
+import utils
 
 # receive message
 def receive_msg(
@@ -16,7 +9,7 @@ def receive_msg(
     colored_server_name,
     breakers
 ):
-    server_header()
+    utils.server_header()
     while True:
         try:
             data = conn.recv(1024)
@@ -67,7 +60,8 @@ def parse_msg(
     msg,
     cmd_prefix='!',
     sim_commands=['simulate', 'simulation'],
-    file_commands=['get', 'download']
+    file_commands=['get', 'download'],
+    help_commands=['help', 'help me']
 ):
     """
     The idea is that some messages from the server 
@@ -79,18 +73,18 @@ def parse_msg(
     send the message or execute any commands
     """
     if len(msg) == 0:
-        parsed = {'message_type': 'chat', 'message': msg}
-        return parsed
+        return {'message_type': 'chat', 'message': msg}
 
     is_cmd = msg[0] == cmd_prefix
     prefix = msg.split(" ")[0].lower()
     is_sim = prefix[1:] in sim_commands
     is_file = prefix[1:] in file_commands
-    
+    is_help = prefix[1:] in help_commands
+
     # then user wants to run a command
-    if is_cmd:
-        parsed = {'message_type': 'chat', 'message': msg}
-    elif is_cmd and is_sim:
+    if not is_cmd:
+        return {'message_type': 'chat', 'message': msg}
+    if is_sim:
         # else, user wants to perform a simulation. The
         # message itself will contain the simulation
         # parameters if they want to perform a simulation
@@ -108,15 +102,21 @@ def parse_msg(
         # flags/arguments/params of the simulation function
         if msg.split(" ")[1].lower() in ['params', 'parameters']:
             parsed['args'] = '--help' # replaces
-    elif is_cmd and is_file:
+        return parsed
+    
+    if is_file:
         print('file sharing not implemented yet')
-        parsed = {}
-    else:
-        # not a chat, not a sim or file command, so just
-        # return exact message with a prefix that it was
-        # command-ambiguous
-        new_msg = f"[COMMAND-AMBIGUOUS] {msg}"
-        parsed = {'message_type': 'chat', 'message': new_msg}
+        return {}
+
+    if is_help:
+        utils.server_header()
+        return None
+    
+    # if mdae it this far, not a chat, not a sim or
+    # file command, so just return exact message with 
+    # a prefix that it was command-ambiguous
+    new_msg = f"[COMMAND-AMBIGUOUS] {msg}"
+    parsed = {'message_type': 'chat', 'message': new_msg}
     return parsed
 
 # send message
@@ -133,7 +133,11 @@ def send_msg(
                 continue
             parsed_msg = parse_msg(msg)
             # make sure we know what message is trying to sent
-            if parsed_msg['message_type'] == 'chat':
+            if parsed_msg is None:
+                # will happen when server just wants to print
+                # a help message for themselves to see.
+                continue
+            elif parsed_msg['message_type'] == 'chat':
                 conn.sendall(msg.encode())
             elif parsed_msg['message_type'] == 'simulation':
                 sim_result = run_simulation(

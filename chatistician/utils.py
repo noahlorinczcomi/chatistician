@@ -37,28 +37,33 @@ def masthead():
 
 # header for server side. reminder of simulations etc.
 def server_header():
-    header = """
-    [+ === SIMULATIONS ================================================ +]
-      [RUN]
-        [format]   !simulate {<simulation type>} <parameters>
-        [example]  !simulate {independent t test} --n1 10 --n2 30
-        [example]  !simulate {paired t test} -n 50
+    header = r"""
+    <-- SIMULATIONS ------------------------------------------------>
+      + RUN
+        > format  :  !simulate {<simulation type>} <parameters>
+        > example :  "!simulate {independent t test} --n1 10 --n2 30"
+        > example :  "!simulate {paired t test} -n 50"
      
-      [OPTIONS]
-        "independent t test", "paired t test"
+      + OPTIONS
+        > "independent t test"
+        > "paired t test"
      
-      [PARAMETERS] (visible only to you)
-        [format]   !simulate params {<simulation type>}
-        [example]  !simulate params {independent t test}
-        [example]  !simulate params {paired t test}
+      + PARAMETERS (visible only to you)
+        > format  :  !simulate params {<simulation type>}
+        > example :  "!simulate params {independent t test}"
+        > example :  "!simulate params {paired t test}"
 
-
-    [+ === CODE ======================================================= +]
-      [REVIEW]
-        [format]   !review code <file_name.extentsion>
-        [example]  !review code analysis.R
-        [example]  !review code latest
+    <-- CODE -------------------------------------------------------->
+      + REVIEW
+        > format  :  !code review <file_name.extentsion>
+        > example :  "!code review analysis.R"
+        > example :  "!code review latest"
+      + WRITING
+        > format  :  !code write <file_name.extension>
+        > example :  !code write mixed_model.R
     
+    <-- HELP -------------------------------------------------------->
+      + RUN "!help" to print this message (only visible to you)
     """
     print(header)
 
