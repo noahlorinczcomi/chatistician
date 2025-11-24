@@ -30,7 +30,8 @@ def receive_msg(
             # flush line before receiving
             print(f"\r\033[K{colored_client_name} {msg}")
             
-            draw_footer()
+            # print("\r\033[K")
+            # draw_footer()
 
             # re-prompt for client
             print(f"{colored_server_name} ", end="", flush=True)
