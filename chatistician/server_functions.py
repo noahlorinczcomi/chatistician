@@ -8,8 +8,8 @@ def draw_footer(session_info="example footer"):
     """Draw footer at bottom of terminal"""
     footer_text = f"Session: {session_info}"
     print(f"\033[s", end="")  # Save cursor position
-    print(f"\033[{get_terminal_height()};0H", end="")  # Move to bottom row
-    print(f"\033[K{footer_text}")  # Clear line, print footer, and newline
+    print(f"\033[{get_terminal_height()};0H", end="")  # Move to last row (footer)
+    print(f"\033[K{footer_text}", end="")  # Clear line and print footer
     print(f"\033[u", end="", flush=True)  # Restore cursor position
 
 # receive message
@@ -19,6 +19,7 @@ def receive_msg(
     colored_server_name,
     breakers
 ):
+    draw_footer(session_info)
     while True:
         try:
             data = conn.recv(1024)
@@ -28,11 +29,11 @@ def receive_msg(
             msg = data.decode()
             # flush line before receiving
             print(f"\r\033[K{colored_client_name} {msg}")
-            
-            print("\r\033[K")
+
             draw_footer()
 
             # re-prompt for client
+            print(f"\033[{get_terminal_height() - 1};0H", end="")  # Move to line above footer
             print(f"{colored_server_name} ", end="", flush=True)
             if msg.lower() in breakers:
                 conn.close()
