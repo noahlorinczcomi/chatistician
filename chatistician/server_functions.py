@@ -8,8 +8,8 @@ def draw_footer(session_info="example footer"):
     """Draw footer at bottom of terminal"""
     footer_text = f"Session: {session_info}"
     print(f"\033[s", end="")  # Save cursor position
-    print(f"\033[{get_terminal_height()};0H", end="")  # Move to last row (footer)
-    print(f"\033[K{footer_text}", end="")  # Clear line and print footer
+    print(f"\033[{get_terminal_height()};0H", end="")  # Move to last row
+    print(f"\033[K\033[7m{footer_text}\033[0m", end="")  # Clear line, print footer with reverse video
     print(f"\033[u", end="", flush=True)  # Restore cursor position
 
 # receive message
@@ -19,7 +19,11 @@ def receive_msg(
     colored_server_name,
     breakers
 ):
+    print("\033[2J\033[H")  # Clear screen, move to top
     draw_footer()
+    message_line = 0
+    max_lines = get_terminal_height() - 2  # Leave room for footer and prompt
+
     while True:
         try:
             data = conn.recv(1024)
@@ -28,12 +32,20 @@ def receive_msg(
                 break # out of while loop
             msg = data.decode()
             # flush line before receiving
-            print(f"\r\033[K{colored_client_name} {msg}")
+            # print(f"\r\033[K{colored_client_name} {msg}")
 
+
+            print(f"\033[{message_line + 1};0H\033[K{colored_client_name} {msg}", end="", flush=True)
+            message_line += 1
+            if message_line >= max_lines:
+                # Scroll: clear screen and restart from top
+                print("\033[2J")
+                message_line = 0
             draw_footer()
 
             # re-prompt for client
-            print(f"\033[{get_terminal_height() - 1};0H", end="")  # Move to line above footer
+            # print(f"\033[{get_terminal_height() - 1};0H", end="")  # Move to line above footer
+            print(f"\033[{get_terminal_height() - 1};0H\033[K{colored_server_name} ", end="", flush=True)
             print(f"{colored_server_name} ", end="", flush=True)
             if msg.lower() in breakers:
                 conn.close()
