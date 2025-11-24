@@ -6,11 +6,10 @@ def get_terminal_height():
 
 def draw_footer(session_info="example footer"):
     """Draw footer at bottom of terminal"""
-    # Save cursor position, move to bottom, draw footer, restore cursor
     footer_text = f"Session: {session_info}"
     print(f"\033[s", end="")  # Save cursor position
     print(f"\033[{get_terminal_height()};0H", end="")  # Move to bottom row
-    print(f"\033[K{footer_text}", end="")  # Clear line and print footer
+    print(f"\033[K{footer_text}")  # Clear line, print footer, and newline
     print(f"\033[u", end="", flush=True)  # Restore cursor position
 
 # receive message
