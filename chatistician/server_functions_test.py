@@ -23,7 +23,8 @@ def receive_msg(
 
             # re-prompt for client
             # print(f"{colored_server_name} ", end="", flush=True)
-            print(f"{colored_client_name} {msg}", flush=True)
+            # print(f"{colored_client_name} {msg}", flush=True)
+            utils_test.print_client_message(msg, colored_client_name, colored_server_name)
 
             utils_test.draw_footer()
             

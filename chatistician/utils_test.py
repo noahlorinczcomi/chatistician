@@ -24,6 +24,19 @@ def draw_footer(text="example footer"):
     sys.stdout.write("\0338")
     sys.stdout.flush()
 
+def print_client_message(client_msg, colored_client_name, colored_server_name):
+    # Save cursor (where server user is typing)
+    sys.stdout.write("\0337")
+
+    # Move cursor to just above server prompt
+    sys.stdout.write("\033[F")  # move up 1 line
+    sys.stdout.write("\033[2K") # clear entire line
+    sys.stdout.write(f"{colored_client_name} {client_msg}\n")
+
+    # Restore cursor to server prompt line
+    sys.stdout.write("\0338")
+    sys.stdout.flush()
+
 # function to return unix color codes
 def colors(col):
     cols = [
