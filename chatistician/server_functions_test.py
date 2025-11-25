@@ -1,6 +1,11 @@
 import os
 import subprocess
-import utils_test
+import utils
+
+def draw_footer(stdscr):
+    rows, cols = stdscr.getmaxyx()
+    footer_row = rows - 1
+    stdscr.addstr(footer_row, 0, "example_footer")
 
 # receive message
 def receive_msg(
@@ -15,20 +20,13 @@ def receive_msg(
             if not data:
                 print(f"\n{colored_client_name} disconnected")
                 break # out of while loop
-            
             msg = data.decode()
             
             # flush line before receiving
-            # print(f"\r\033[K{colored_client_name} {msg}")
+            print(f"\r\033[K{colored_client_name} {msg}")
 
             # re-prompt for client
-            # print(f"{colored_server_name} ", end="", flush=True)
-            # print(f"{colored_client_name} {msg}", flush=True)
-            # When receiving a message from client
-            utils_test.print_message(f"{colored_client_name} {msg}")
-            utils_test.draw_footer("Type !help anytime")  # footer stays on bottom
-
-            utils_test.draw_footer()
+            print(f"{colored_server_name} ", end="", flush=True)
             
             if msg.lower() in breakers:
                 conn.close()

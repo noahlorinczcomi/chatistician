@@ -1,17 +1,11 @@
 import socket
 import threading
 import yaml
-import utils_test
+import utils
 import server_functions_test
-import subprocess
+import curses
 
-subprocess.run('clear', shell=True, text=True)
-
-utils_test.init_terminal()
-utils_test.draw_footer("Type !help anytime")
-
-# utils_test.init_footer_area()
-# utils_test.draw_footer()
+curses.wrapper(server_functions_test.draw_footer())
 
 # socket config
 with open('config.yaml', 'r') as file:
@@ -37,18 +31,18 @@ print("Type \"!help\" anytime to privately view full functionality")
 # defining breaking criteria
 breakers = config['breakers']['values']
 # choosing terminal colors
-scolor = utils_test.colors(config['colors']['server'])
-ccolor = utils_test.colors(config['colors']['client'])
+scolor = utils.colors(config['colors']['server'])
+ccolor = utils.colors(config['colors']['client'])
 colored_client_name = f"{ccolor[0]}[{client_name}]{ccolor[1]}"
 colored_server_name = f"{scolor[0]}[Chatistician]{scolor[1]}"
 
 # start receiving and sending threads
 receive_thread = threading.Thread(
-    target=server_functions_test.receive_msg,
+    target=server_functions.receive_msg,
     args=(conn, colored_client_name, colored_server_name, breakers)
 )
 send_thread = threading.Thread(
-    target=server_functions_test.send_msg,
+    target=server_functions.send_msg,
     args=(conn, colored_server_name, breakers)
 )
 
