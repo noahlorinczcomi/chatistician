@@ -3,7 +3,9 @@ import threading
 import yaml
 import utils_test
 import server_functions_test
+import subprocess
 
+subprocess.run('clear', shell=True, text=True)
 utils_test.init_footer_area()
 utils_test.draw_footer()
 

@@ -136,7 +136,6 @@ def send_msg(
     while True:
         try:
             msg = input(f"{colored_server_name}")
-            utils_test.safe_print_above_footer("", "Connected • !help")
             if msg == "":
                 conn.sendall(msg.encode())
                 continue
