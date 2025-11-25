@@ -5,7 +5,7 @@ import utils
 import server_functions_test
 import curses
 
-curses.wrapper(server_functions_test.draw_footer())
+curses.wrapper(server_functions_test.draw_footer)
 
 # socket config
 with open('config.yaml', 'r') as file:
