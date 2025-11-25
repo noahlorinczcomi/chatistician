@@ -10,9 +10,6 @@ subprocess.run('clear', shell=True, text=True)
 utils_test.init_terminal()
 utils_test.draw_footer("Type !help anytime")
 
-# Server prompt stays at bottom line via input():
-msg = input(f"{colored_server_name}")
-
 # utils_test.init_footer_area()
 # utils_test.draw_footer()
 
