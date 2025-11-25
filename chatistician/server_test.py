@@ -3,6 +3,9 @@ import threading
 import yaml
 import utils
 import server_functions_test
+import subprocess
+
+subprocess.run('clear', text=True, shell=True)
 
 # socket config
 with open('config.yaml', 'r') as file:

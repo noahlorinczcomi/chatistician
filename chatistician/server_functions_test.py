@@ -26,8 +26,8 @@ def receive_msg(
             msg = data.decode()
             
             # flush line before receiving
-            # print(f"\r\033[K{colored_client_name} {msg}")
-            print(f"{colored_client_name} {msg}")
+            print(f"\r\033[K{colored_client_name} {msg}")
+            # print(f"{colored_client_name} {msg}")
             redraw_header()
             # re-prompt for client
             print(f"{colored_server_name} ", end="", flush=True)
