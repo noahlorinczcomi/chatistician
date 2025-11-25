@@ -2,6 +2,29 @@ import os
 import sys
 import shutil
 
+import shutil
+
+def init_terminal(scroll_prompt=True):
+    cols, rows = shutil.get_terminal_size()
+    if scroll_prompt:
+        # Set scrollable region: lines 1..rows-2 scroll
+        # Bottom line reserved for server input/prompt
+        sys.stdout.write(f"\033[1;{rows-1}r")
+        sys.stdout.flush()
+
+def print_message(msg):
+    # Print in the scrolling region
+    print(msg, flush=True)
+
+def draw_footer(text="Type !help"):
+    cols, rows = shutil.get_terminal_size()
+    sys.stdout.write("\0337")            # save cursor
+    sys.stdout.write(f"\033[{rows};1H")  # bottom line
+    sys.stdout.write("\033[2K")          # clear line
+    sys.stdout.write(text)               # draw footer
+    sys.stdout.write("\0338")            # restore cursor
+    sys.stdout.flush()
+
 def init_footer_area():
     cols, rows = shutil.get_terminal_size()
     # Set scrolling region: lines 1 .. rows-1 scroll

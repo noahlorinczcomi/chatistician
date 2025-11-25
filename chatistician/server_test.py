@@ -6,8 +6,19 @@ import server_functions_test
 import subprocess
 
 subprocess.run('clear', shell=True, text=True)
-utils_test.init_footer_area()
-utils_test.draw_footer()
+
+utils_test.init_terminal()
+utils_test.draw_footer("Type !help anytime")
+
+# When receiving a message from client
+utils_test.print_message(f"{colored_client_name} {msg}")
+utils_test.draw_footer("Type !help anytime")  # footer stays on bottom
+
+# Server prompt stays at bottom line via input():
+msg = input(f"{colored_server_name}")
+
+# utils_test.init_footer_area()
+# utils_test.draw_footer()
 
 # socket config
 with open('config.yaml', 'r') as file:
