@@ -3,7 +3,7 @@ import subprocess
 import utils
 import sys
 
-def redraw_header(text):
+def redraw_header(text="example header"):
     """Redraw persistent header without moving the rest of the terminal."""
     # Save cursor position
     sys.stdout.write("\033[s")
