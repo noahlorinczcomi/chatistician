@@ -10,10 +10,6 @@ subprocess.run('clear', shell=True, text=True)
 utils_test.init_terminal()
 utils_test.draw_footer("Type !help anytime")
 
-# When receiving a message from client
-utils_test.print_message(f"{colored_client_name} {msg}")
-utils_test.draw_footer("Type !help anytime")  # footer stays on bottom
-
 # Server prompt stays at bottom line via input():
 msg = input(f"{colored_server_name}")
 

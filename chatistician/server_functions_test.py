@@ -24,7 +24,9 @@ def receive_msg(
             # re-prompt for client
             # print(f"{colored_server_name} ", end="", flush=True)
             # print(f"{colored_client_name} {msg}", flush=True)
-            utils_test.print_client_message(msg, colored_client_name, colored_server_name)
+            # When receiving a message from client
+            utils_test.print_message(f"{colored_client_name} {msg}")
+            utils_test.draw_footer("Type !help anytime")  # footer stays on bottom
 
             utils_test.draw_footer()
             
