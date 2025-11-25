@@ -28,18 +28,18 @@ print("Type \"!help\" anytime to privately view full functionality")
 # defining breaking criteria
 breakers = config['breakers']['values']
 # choosing terminal colors
-scolor = utils.colors(config['colors']['server'])
-ccolor = utils.colors(config['colors']['client'])
+scolor = utils_test.colors(config['colors']['server'])
+ccolor = utils_test.colors(config['colors']['client'])
 colored_client_name = f"{ccolor[0]}[{client_name}]{ccolor[1]}"
 colored_server_name = f"{scolor[0]}[Chatistician]{scolor[1]}"
 
 # start receiving and sending threads
 receive_thread = threading.Thread(
-    target=server_functions.receive_msg,
+    target=server_functions_test.receive_msg,
     args=(conn, colored_client_name, colored_server_name, breakers)
 )
 send_thread = threading.Thread(
-    target=server_functions.send_msg,
+    target=server_functions_test.send_msg,
     args=(conn, colored_server_name, breakers)
 )
 
