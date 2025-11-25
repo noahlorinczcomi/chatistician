@@ -17,7 +17,7 @@ import sys
 #     sys.stdout.write("\033[u")
 #     sys.stdout.flush()
 
-def redraw_header(text, fg_color=34, bg_color=47):
+def redraw_header(text='Type "!help" anytime to view help screen', fg_color=34, bg_color=47):
     """
     Redraw persistent header at the top with optional colors.
     
