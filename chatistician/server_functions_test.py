@@ -2,6 +2,7 @@ import os
 import subprocess
 import utils
 import sys
+import shutil
 
 # def redraw_header(text="example header"):
 #     """Redraw persistent header without moving the rest of the terminal."""
@@ -20,9 +21,11 @@ import sys
 def redraw_header(text='Type "!help" anytime to view help screen', fg_color=34, bg_color=47):
     """
     Redraw persistent header at the top with optional colors.
-    
-    fg_color, bg_color: ANSI color codes as strings, e.g., '31' for red, '44' for blue background.
+    The background will cover the entire width of the terminal.
     """
+    # Get terminal width
+    cols, _ = shutil.get_terminal_size()
+
     # Build color sequence
     color_seq = ""
     if fg_color:
@@ -32,13 +35,16 @@ def redraw_header(text='Type "!help" anytime to view help screen', fg_color=34, 
 
     reset_seq = "\033[0m"
 
+    # Pad text to full width
+    padded_text = text.ljust(cols)
+
     # Save cursor, move to top, clear line
     sys.stdout.write("\033[s")      # save cursor
     sys.stdout.write("\033[H")      # move to top-left
     sys.stdout.write("\033[2K")     # clear line
 
     # Print colored header
-    sys.stdout.write(f"{color_seq}{text}{reset_seq}\n")
+    sys.stdout.write(f"{color_seq}{padded_text}{reset_seq}\n")
 
     # Restore cursor
     sys.stdout.write("\033[u")
