@@ -6,7 +6,7 @@ import threading
 
 PRINT_LOCK = threading.Lock()
 
-def safe_print_with_footer(text, footer):
+def safe_print_above_footer(text, footer):
     cols, rows = shutil.get_terminal_size()
 
     # 1. Move cursor to the line just above the footer
