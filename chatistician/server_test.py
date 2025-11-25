@@ -2,7 +2,7 @@ import socket
 import threading
 import yaml
 import utils
-import server_functions
+import server_functions_test
 
 # socket config
 with open('config.yaml', 'r') as file:
@@ -35,11 +35,11 @@ colored_server_name = f"{scolor[0]}[Chatistician]{scolor[1]}"
 
 # start receiving and sending threads
 receive_thread = threading.Thread(
-    target=server_functions.receive_msg,
+    target=server_functions_test.receive_msg,
     args=(conn, colored_client_name, colored_server_name, breakers)
 )
 send_thread = threading.Thread(
-    target=server_functions.send_msg,
+    target=server_functions_test.send_msg,
     args=(conn, colored_server_name, breakers)
 )
 

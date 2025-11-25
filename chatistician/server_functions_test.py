@@ -1,6 +1,7 @@
 import os
 import subprocess
 import utils
+import sys
 
 def redraw_header(text="example header"):
     """Redraw the persistent header on the top line."""
