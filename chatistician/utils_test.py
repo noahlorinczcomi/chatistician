@@ -6,29 +6,23 @@ import threading
 
 PRINT_LOCK = threading.Lock()
 
-def safe_print_above_footer(text, footer_text):
-    with PRINT_LOCK:
-        rows, cols = shutil.get_terminal_size()
-        text = str(text)
+def safe_print_with_footer(text, footer):
+    cols, rows = shutil.get_terminal_size()
 
-        # 1) Move cursor to the line *above* the footer
-        sys.stdout.write(f"\033[{rows-1};1H")  # row = bottom - 1, col = 1
+    # 1. Move cursor to the line just above the footer
+    sys.stdout.write(f"\033[{rows-1};1H")    # go to row h-1, col 1
 
-        # 2) Insert a blank line (push footer downward temporarily)
-        sys.stdout.write("\033[L")  # "insert one line"
+    # 2. Scroll the top area up by 1 line
+    sys.stdout.write("\033[S")               # scroll up 1 line in current scroll region
 
-        # 3) Print your message in that newly inserted line
-        sys.stdout.write(text[:cols] + "\n")
+    # 3. Print the message
+    print(text, end="")
 
-        # 4) Redraw footer on last line (it moved down due to insert)
-        sys.stdout.write(f"\033[{rows};1H")   # move to last line
-        sys.stdout.write("\033[K")            # clear line
-        sys.stdout.write(footer_text[:cols])  # draw footer
-
-        # 5) Move cursor back to input line (row = bottom - 1, but now message ↑)
-        sys.stdout.write(f"\033[{rows-1};1H")
-
-        sys.stdout.flush()
+    # 4. Redraw footer on last line
+    sys.stdout.write(f"\033[{rows};1H")      # go to last line
+    sys.stdout.write("\033[2K")              # clear footer line
+    sys.stdout.write(footer)
+    sys.stdout.flush()
 
 # function to return unix color codes
 def colors(col):
