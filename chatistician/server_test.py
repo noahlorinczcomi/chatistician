@@ -4,6 +4,9 @@ import yaml
 import utils_test
 import server_functions_test
 
+utils_test.init_footer_area()
+utils_test.draw_footer()
+
 # socket config
 with open('config.yaml', 'r') as file:
     config = yaml.safe_load(file)

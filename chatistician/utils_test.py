@@ -1,33 +1,27 @@
 import os
 import sys
 import shutil
-import threading
 
+def init_footer_area():
+    cols, rows = shutil.get_terminal_size()
+    # Set scrolling region: lines 1 .. rows-1 scroll
+    # Bottom line (rows) is protected
+    sys.stdout.write(f"\033[1;{rows-1}r")
+    sys.stdout.flush()
 
-PRINT_LOCK = threading.Lock()
-
-def safe_print_above_footer(text, footer):
+def draw_footer(text="example footer"):
     cols, rows = shutil.get_terminal_size()
 
-    CHAT_LINE = rows - 1      # the row just above the footer
-    FOOTER_LINE = rows
+    # Save cursor pos
+    sys.stdout.write("\0337")
 
-    # 1. Move cursor to the chat area
-    sys.stdout.write(f"\033[{CHAT_LINE};1H")
-    sys.stdout.write("\033[2K")   # clear the entire chat line
+    # Write footer on bottom line
+    sys.stdout.write(f"\033[{rows};1H")  # bottom row
+    sys.stdout.write("\033[2K")          # clear entire line
+    sys.stdout.write(text)
 
-    # 2. Scroll the top chat region by 1 line
-    #    so older messages move upward
-    sys.stdout.write("\033[S")
-
-    # 3. After scrolling, print the new message cleanly
-    sys.stdout.write(f"\033[{CHAT_LINE};1H")  # go to clean line again
-    print(text, end="\n")
-
-    # 4. Redraw footer on bottom row
-    sys.stdout.write(f"\033[{FOOTER_LINE};1H")
-    sys.stdout.write("\033[2K")
-    sys.stdout.write(footer)
+    # Restore cursor
+    sys.stdout.write("\0338")
     sys.stdout.flush()
 
 # function to return unix color codes

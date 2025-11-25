@@ -13,22 +13,18 @@ def receive_msg(
         try:
             data = conn.recv(1024)
             if not data:
-                utils_test.safe_print_above_footer(
-                    f"{colored_client_name} disconnected","Connected • !help"
-                )
-                # print(f"\n{colored_client_name} disconnected")
+                print(f"\n{colored_client_name} disconnected")
                 break # out of while loop
             
             msg = data.decode()
-            utils_test.safe_print_above_footer(
-                f"{colored_client_name} {msg}","Connected • !help"
-            )
             
             # flush line before receiving
             # print(f"\r\033[K{colored_client_name} {msg}")
 
             # re-prompt for client
-            print(f"{colored_server_name} ", end="", flush=True)
+            # print(f"{colored_server_name} ", end="", flush=True)
+            print(f"{colored_server_name} {msg}", flush=True)
+            utils_test.draw_footer()
             
             if msg.lower() in breakers:
                 conn.close()
