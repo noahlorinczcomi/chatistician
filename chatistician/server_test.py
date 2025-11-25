@@ -2,8 +2,7 @@ import socket
 import threading
 import yaml
 import utils
-import server_functions_test
-import curses
+import server_functions
 
 # socket config
 with open('config.yaml', 'r') as file:
@@ -35,30 +34,23 @@ colored_client_name = f"{ccolor[0]}[{client_name}]{ccolor[1]}"
 colored_server_name = f"{scolor[0]}[Chatistician]{scolor[1]}"
 
 # start receiving and sending threads
+receive_thread = threading.Thread(
+    target=server_functions.receive_msg,
+    args=(conn, colored_client_name, colored_server_name, breakers)
+)
+send_thread = threading.Thread(
+    target=server_functions.send_msg,
+    args=(conn, colored_server_name, breakers)
+)
 
-threading.Thread(
-    target=server_functions_test.receive_msg, args=(conn, colored_client_name, breakers), daemon=True).start()
+receive_thread.start()
+send_thread.start()
 
-# Launch curses UI (this handles server input)
-curses.wrapper(server_functions_test.curses_main, conn)
+# above code blocks. Wait for threads to finish before closing conn
+send_thread.join()
+receive_thread.join()
 
-# receive_thread = threading.Thread(
-#     target=server_functions_test.receive_msg,
-#     args=(conn, colored_client_name, colored_server_name, breakers)
-# )
-# send_thread = threading.Thread(
-#     target=server_functions_test.send_msg,
-#     args=(conn, colored_server_name, breakers)
-# )
-
-# receive_thread.start()
-# send_thread.start()
-
-# # above code blocks. Wait for threads to finish before closing conn
-# send_thread.join()
-# receive_thread.join()
-
-# # close server entirely
-# conn.close()
-# server.close()
-# print("Connection closed")
+# close server entirely
+conn.close()
+server.close()
+print("Connection closed")
