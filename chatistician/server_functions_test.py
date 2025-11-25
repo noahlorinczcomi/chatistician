@@ -3,17 +3,44 @@ import subprocess
 import utils
 import sys
 
-def redraw_header(text="example header"):
-    """Redraw persistent header without moving the rest of the terminal."""
-    # Save cursor position
-    sys.stdout.write("\033[s")
-    # Move to top-left
-    sys.stdout.write("\033[H")
-    # Clear the line
-    sys.stdout.write("\033[2K")
-    # Print the header
-    sys.stdout.write(text + "\n")
-    # Restore cursor position
+# def redraw_header(text="example header"):
+#     """Redraw persistent header without moving the rest of the terminal."""
+#     # Save cursor position
+#     sys.stdout.write("\033[s")
+#     # Move to top-left
+#     sys.stdout.write("\033[H")
+#     # Clear the line
+#     sys.stdout.write("\033[2K")
+#     # Print the header
+#     sys.stdout.write(text + "\n")
+#     # Restore cursor position
+#     sys.stdout.write("\033[u")
+#     sys.stdout.flush()
+
+def redraw_header(text, fg_color=34, bg_color=47):
+    """
+    Redraw persistent header at the top with optional colors.
+    
+    fg_color, bg_color: ANSI color codes as strings, e.g., '31' for red, '44' for blue background.
+    """
+    # Build color sequence
+    color_seq = ""
+    if fg_color:
+        color_seq += f"\033[{fg_color}m"
+    if bg_color:
+        color_seq += f"\033[{bg_color}m"
+
+    reset_seq = "\033[0m"
+
+    # Save cursor, move to top, clear line
+    sys.stdout.write("\033[s")      # save cursor
+    sys.stdout.write("\033[H")      # move to top-left
+    sys.stdout.write("\033[2K")     # clear line
+
+    # Print colored header
+    sys.stdout.write(f"{color_seq}{text}{reset_seq}\n")
+
+    # Restore cursor
     sys.stdout.write("\033[u")
     sys.stdout.flush()
 
@@ -34,8 +61,8 @@ def receive_msg(
             
             # flush line before receiving
             print(f"\r\033[K{colored_client_name} {msg}")
-            # print(f"{colored_client_name} {msg}")
-            redraw_header()
+            redraw_header() # keeps help header at top
+
             # re-prompt for client
             print(f"{colored_server_name} ", end="", flush=True)
             
@@ -168,7 +195,7 @@ def send_msg(
                 print(sim_result)
                 conn.sendall(sim_result.encode())
             
-            redraw_header()
+            redraw_header() # keeps help header at top
             #conn.sendall(msg.encode())
             if msg.lower() in breakers:
                 conn.close()
