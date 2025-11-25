@@ -1,6 +1,17 @@
 import os
 import subprocess
 import utils
+import shutil
+import sys
+
+def draw_footer(text):
+    rows, cols = shutil.get_terminal_size()
+    sys.stdout.write("\0337")  # save cursor position
+    sys.stdout.write(f"\033[{rows};1H")  # move to last line
+    sys.stdout.write("\033[K")  # clear line
+    sys.stdout.write(text[:cols])  # draw footer
+    sys.stdout.write("\0338")  # restore cursor position
+    sys.stdout.flush()
 
 # receive message
 def receive_msg(
@@ -19,6 +30,8 @@ def receive_msg(
             
             # flush line before receiving
             print(f"\r\033[K{colored_client_name} {msg}")
+
+            draw_footer("Connected • !help for commands")
 
             # re-prompt for client
             print(f"{colored_server_name} ", end="", flush=True)
@@ -133,6 +146,7 @@ def send_msg(
     while True:
         try:
             msg = input(f"{colored_server_name}")
+            draw_footer("Connected • !help for commands")
             if msg == "":
                 conn.sendall(msg.encode())
                 continue
