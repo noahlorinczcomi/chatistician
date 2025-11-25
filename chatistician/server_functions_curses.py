@@ -41,7 +41,7 @@ def draw_chat():
         # display all messages (can scroll up)
         for i, msg in enumerate(messages):
             try:
-                chat_win.addstr(i, 0, msg[:wdith-1])
+                chat_win.addstr(i, 0, msg[:width-1])
             except curses.error:
                 pass
         
