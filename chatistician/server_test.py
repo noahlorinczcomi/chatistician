@@ -36,10 +36,11 @@ colored_server_name = f"{scolor[0]}[Chatistician]{scolor[1]}"
 
 # start receiving and sending threads
 
-threading.Thread(target=server_functions_test.receive_msg, args=(conn, colored_client_name, breakers), daemon=True).start()
+threading.Thread(
+    target=server_functions_test.receive_msg, args=(conn, colored_client_name, breakers), daemon=True).start()
 
 # Launch curses UI (this handles server input)
-curses.wrapper(server_functions_test.curses_main)
+curses.wrapper(server_functions_test.curses_main, conn)
 
 # receive_thread = threading.Thread(
 #     target=server_functions_test.receive_msg,

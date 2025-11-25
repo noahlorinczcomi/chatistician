@@ -12,7 +12,7 @@ def draw_header(stdscr, text, cols):
     stdscr.addstr(0, 0, text[:cols])
     stdscr.refresh() # print each update
 
-def curses_main(stdscr):
+def curses_main(stdscr,conn):
     curses.curs_set(1)
     stdscr.clear()
     rows, cols = stdscr.getmaxyx()
@@ -27,7 +27,7 @@ def curses_main(stdscr):
     stdscr.refresh()
 
     while True:
-        # 1️⃣ Draw any new client messages
+        # 1 Draw any new client messages
         while not message_queue.empty():
             msg = message_queue.get()
             chat_lines.append(msg)
@@ -37,26 +37,26 @@ def curses_main(stdscr):
                 stdscr.addstr(chat_start_row + idx, 0, " " * (cols - 1))
                 stdscr.addstr(chat_start_row + idx, 0, line[:cols - 1])
 
-        # 2️⃣ Draw input prompt
-        stdscr.addstr(input_row, 0, f"{colored_server_name} ")
+        # 2 Draw input prompt
+        stdscr.addstr(input_row, 0, f"[NOAH]")
         stdscr.clrtoeol()
         stdscr.refresh()
 
         curses.echo()
         try:
-            user_input = stdscr.getstr(input_row, len(colored_server_name)+1, 100)
+            user_input = stdscr.getstr(input_row, len("NOAH")+1, 100)
             user_input = user_input.decode()
         except KeyboardInterrupt:
             break
         curses.noecho()
 
-        # 3️⃣ Send server message
+        # 3 Send server message
         conn.sendall(user_input.encode())
-        chat_lines.append(f"{colored_server_name} {user_input}")
+        chat_lines.append(f"[NOAH] {user_input}")
         if len(chat_lines) > (rows - 3):
             chat_lines = chat_lines[-(rows - 3):]
 
-        # 4️⃣ Redraw chat area
+        # 4 Redraw chat area
         for idx, line in enumerate(chat_lines):
             stdscr.addstr(chat_start_row + idx, 0, " " * (cols - 1))
             stdscr.addstr(chat_start_row + idx, 0, line[:cols - 1])
@@ -202,7 +202,7 @@ def send_msg(
 ):
     while True:
         try:
-            msg = input(f"{colored_server_name}")
+            msg = input(f"[NOAH]")
             if msg == "":
                 conn.sendall(msg.encode())
                 continue
