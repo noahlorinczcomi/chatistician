@@ -3,11 +3,18 @@ import subprocess
 import utils
 import sys
 
-def redraw_header(text="example header"):
-    """Redraw the persistent header on the top line."""
-    sys.stdout.write("\033[H")    # Move cursor to top-left
-    sys.stdout.write("\033[2K")   # Clear the line
-    sys.stdout.write(text + "\n") # Print the header text
+def redraw_header(text):
+    """Redraw persistent header without moving the rest of the terminal."""
+    # Save cursor position
+    sys.stdout.write("\033[s")
+    # Move to top-left
+    sys.stdout.write("\033[H")
+    # Clear the line
+    sys.stdout.write("\033[2K")
+    # Print the header
+    sys.stdout.write(text + "\n")
+    # Restore cursor position
+    sys.stdout.write("\033[u")
     sys.stdout.flush()
 
 # receive message
