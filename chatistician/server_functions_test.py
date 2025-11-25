@@ -1,6 +1,6 @@
 import os
 import subprocess
-import utils
+import utils_test
 
 # receive message
 def receive_msg(
@@ -13,12 +13,19 @@ def receive_msg(
         try:
             data = conn.recv(1024)
             if not data:
-                print(f"\n{colored_client_name} disconnected")
+                utils_test.safe_print_above_footer(
+                    f"{colored_client_name} disconnected","Connected • !help"
+                )
+                # print(f"\n{colored_client_name} disconnected")
                 break # out of while loop
+            
             msg = data.decode()
+            utils_test.safe_print_above_footer(
+                f"{colored_client_name} {msg}","Connected • !help"
+            )
             
             # flush line before receiving
-            print(f"\r\033[K{colored_client_name} {msg}")
+            # print(f"\r\033[K{colored_client_name} {msg}")
 
             # re-prompt for client
             print(f"{colored_server_name} ", end="", flush=True)
@@ -133,6 +140,7 @@ def send_msg(
     while True:
         try:
             msg = input(f"{colored_server_name}")
+            utils_test.safe_print_above_footer("", "Connected • !help")
             if msg == "":
                 conn.sendall(msg.encode())
                 continue
