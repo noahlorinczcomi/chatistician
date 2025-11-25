@@ -9,18 +9,24 @@ PRINT_LOCK = threading.Lock()
 def safe_print_above_footer(text, footer):
     cols, rows = shutil.get_terminal_size()
 
-    # 1. Move cursor to the line just above the footer
-    sys.stdout.write(f"\033[{rows-1};1H")    # go to row h-1, col 1
+    CHAT_LINE = rows - 1      # the row just above the footer
+    FOOTER_LINE = rows
 
-    # 2. Scroll the top area up by 1 line
-    sys.stdout.write("\033[S")               # scroll up 1 line in current scroll region
+    # 1. Move cursor to the chat area
+    sys.stdout.write(f"\033[{CHAT_LINE};1H")
+    sys.stdout.write("\033[2K")   # clear the entire chat line
 
-    # 3. Print the message
-    print(text, end="")
+    # 2. Scroll the top chat region by 1 line
+    #    so older messages move upward
+    sys.stdout.write("\033[S")
 
-    # 4. Redraw footer on last line
-    sys.stdout.write(f"\033[{rows};1H")      # go to last line
-    sys.stdout.write("\033[2K")              # clear footer line
+    # 3. After scrolling, print the new message cleanly
+    sys.stdout.write(f"\033[{CHAT_LINE};1H")  # go to clean line again
+    print(text, end="\n")
+
+    # 4. Redraw footer on bottom row
+    sys.stdout.write(f"\033[{FOOTER_LINE};1H")
+    sys.stdout.write("\033[2K")
     sys.stdout.write(footer)
     sys.stdout.flush()
 
