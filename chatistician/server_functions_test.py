@@ -1,11 +1,72 @@
 import os
 import subprocess
 import utils
+import curses
+import queue
 
-def draw_footer(stdscr):
+message_queue = queue.Queue()
+
+def draw_header(stdscr, text, cols):
+    # always overwrite top row
+    stdscr.addstr(0, 0, " " * cols) # clear line
+    stdscr.addstr(0, 0, text[:cols])
+    stdscr.refresh() # print each update
+
+def curses_main(stdscr):
+    curses.curs_set(1)
+    stdscr.clear()
     rows, cols = stdscr.getmaxyx()
+
+    chat_start_row = 1
+    input_row = rows - 2
     footer_row = rows - 1
-    stdscr.addstr(footer_row, 0, "example_footer")
+    chat_lines = []
+
+    footer_text = "Type !help anytime"
+    stdscr.addstr(footer_row, 0, footer_text[:cols])
+    stdscr.refresh()
+
+    while True:
+        # 1️⃣ Draw any new client messages
+        while not message_queue.empty():
+            msg = message_queue.get()
+            chat_lines.append(msg)
+            if len(chat_lines) > (rows - 3):
+                chat_lines = chat_lines[-(rows - 3):]
+            for idx, line in enumerate(chat_lines):
+                stdscr.addstr(chat_start_row + idx, 0, " " * (cols - 1))
+                stdscr.addstr(chat_start_row + idx, 0, line[:cols - 1])
+
+        # 2️⃣ Draw input prompt
+        stdscr.addstr(input_row, 0, f"{colored_server_name} ")
+        stdscr.clrtoeol()
+        stdscr.refresh()
+
+        curses.echo()
+        try:
+            user_input = stdscr.getstr(input_row, len(colored_server_name)+1, 100)
+            user_input = user_input.decode()
+        except KeyboardInterrupt:
+            break
+        curses.noecho()
+
+        # 3️⃣ Send server message
+        conn.sendall(user_input.encode())
+        chat_lines.append(f"{colored_server_name} {user_input}")
+        if len(chat_lines) > (rows - 3):
+            chat_lines = chat_lines[-(rows - 3):]
+
+        # 4️⃣ Redraw chat area
+        for idx, line in enumerate(chat_lines):
+            stdscr.addstr(chat_start_row + idx, 0, " " * (cols - 1))
+            stdscr.addstr(chat_start_row + idx, 0, line[:cols - 1])
+
+        # Redraw footer
+        stdscr.addstr(footer_row, 0, footer_text[:cols])
+        stdscr.clrtoeol()
+        stdscr.refresh()
+
+
 
 # receive message
 def receive_msg(
@@ -18,21 +79,25 @@ def receive_msg(
         try:
             data = conn.recv(1024)
             if not data:
-                print(f"\n{colored_client_name} disconnected")
+                message_queue.put(f"{colored_client_name} disconnected")
+                # print(f"\n{colored_client_name} disconnected")
                 break # out of while loop
             msg = data.decode()
             
             # flush line before receiving
-            print(f"\r\033[K{colored_client_name} {msg}")
+            # print(f"\r\033[K{colored_client_name} {msg}")
+
+            message_queue.put(f"{colored_client_name} {msg}")
 
             # re-prompt for client
-            print(f"{colored_server_name} ", end="", flush=True)
+            # print(f"{colored_server_name} ", end="", flush=True)
             
             if msg.lower() in breakers:
                 conn.close()
                 break
         except Exception as e:
-            print(f"Error: {e}")
+            message_queue.put(f"Error: {e}")
+            # print(f"Error: {e}")
             break
 
 # function to run simulation (R script) from within chat
