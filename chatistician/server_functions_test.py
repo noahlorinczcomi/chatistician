@@ -18,35 +18,39 @@ import shutil
 #     sys.stdout.write("\033[u")
 #     sys.stdout.flush()
 
-def redraw_header(text='Type "!help" anytime to view help screen', fg_color=30, bg_color=47):
+def persistent_header(
+    text='Run "!help" to view commands',
+    fg_color=30,
+    bg_color=47
+):
     """
-    Redraw persistent header at the top with optional colors.
-    The background will cover the entire width of the terminal.
+    Print header whenever a message is sent or received.
+    This code gets the current cursor position, goes to
+    the top line and prints the header, and jumps back
+    to the original cursor position. it is ran after
+    messages are sent and received.
     """
     # Get terminal width
     cols, _ = shutil.get_terminal_size()
 
-    # Build color sequence
-    color_seq = ""
-    if fg_color:
-        color_seq += f"\033[{fg_color}m"
-    if bg_color:
-        color_seq += f"\033[{bg_color}m"
-
+    # construct color string (foreground + background)
+    color_seq = f"\033[{fg_color}m" + f"\033[{bg_color}m"
     reset_seq = "\033[0m"
 
-    # Pad text to full width
+    # In case the header doesn't cover the entire width
+    # of the terminal and you want a background color,
+    # pad the header text to cover the entire width
     padded_text = text.ljust(cols)
 
-    # Save cursor, move to top, clear line
-    sys.stdout.write("\033[s")      # save cursor
-    sys.stdout.write("\033[H")      # move to top-left
-    sys.stdout.write("\033[2K")     # clear line
+    # save cursor position then move to top-left position
+    sys.stdout.write("\033[s")      # save cursor position
+    sys.stdout.write("\033[H")      # move to top-left position
+    sys.stdout.write("\033[2K")     # clear top-left line
 
-    # Print colored header
+    # print persistent header
     sys.stdout.write(f"{color_seq}{padded_text}{reset_seq}\n")
 
-    # Restore cursor
+    # put cursor back where it was
     sys.stdout.write("\033[u")
     sys.stdout.flush()
 
@@ -67,14 +71,15 @@ def receive_msg(
             
             # flush line before receiving
             print(f"\r\033[K{colored_client_name} {msg}")
-            redraw_header() # keeps help header at top
+            persistent_header() # keeps help header at top of terminal
 
-            # re-prompt for client
+            # re-prompt the server
             print(f"{colored_server_name} ", end="", flush=True)
             
             if msg.lower() in breakers:
                 conn.close()
                 break
+            
         except Exception as e:
             print(f"Error: {e}")
             break
@@ -201,8 +206,8 @@ def send_msg(
                 print(sim_result)
                 conn.sendall(sim_result.encode())
             
-            redraw_header() # keeps help header at top
-            #conn.sendall(msg.encode())
+            persistent_header() # print help header after sending message
+            
             if msg.lower() in breakers:
                 conn.close()
                 break
