@@ -7,7 +7,7 @@ optlist = list(
     make_option('--variance-pre', type='numeric', default=1, help='Variance in pre-treatment condition'),
     make_option('--variance-post', type='numeric', default=1, help='Variance in post-treatment condition'),
     make_option('--correlation', type='numeric', default=0.5, help='Correlation between paired observations'),
-    make_option('--number-simulations', type='integer', default=10000, help='Number of simulation replicates')
+    make_option('--number-simulations', type='integer', default=1000, help='Number of simulation replicates')
 )
 
 opts = parse_args(OptionParser(option_list=optlist))

@@ -5,7 +5,7 @@ optlist = list(
     make_option('--type-1', type='numeric', default=0.05, help='Type 1 error / significance threshold'),
     make_option('--variance-1', type='numeric', default=1, help='Variance in group 1'),
     make_option('--variance-2', type='numeric', default=1, help='Variance in group 2'),
-    make_option('--number-simulations', type='integer', default=10000, help='Number of simulation replicates')
+    make_option('--number-simulations', type='integer', default=1000, help='Number of simulation replicates')
 )
 
 opts = parse_args(OptionParser(option_list=optlist))
