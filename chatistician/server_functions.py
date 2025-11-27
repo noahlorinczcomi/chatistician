@@ -47,7 +47,8 @@ def receive_msg(
     conn,
     colored_client_name,
     colored_server_name,
-    breakers
+    breakers,
+    file_prefix="FILE:"
 ):
     while True:
         try:
@@ -57,11 +58,13 @@ def receive_msg(
                 break # out of while loop
             msg = data.decode()
 
-            # for handling file send logic
-            if msg in ['READY', 'FILE_COMPLETE']:
+            # Check if it's a file transfer
+            if msg.startswith(file_prefix):
+                receive_file(data, msg, conn)
+                print(f"{colored_server_name} ", end="", flush=True)
                 continue
 
-            # flush line before receiving
+            # flush line before sending
             print(f"\r\033[K{colored_client_name} {msg}")
             persistent_header() # keeps help header at top of terminal
 
@@ -76,6 +79,27 @@ def receive_msg(
         except Exception as e:
             print(f"Error: {e}")
             break
+
+# receive a file from the client
+def receive_file(data, msg, conn):
+    parts = msg.split(":", 3)
+    filename = parts[1]
+    filesize = int(parts[2])
+    
+    # Receive the file content
+    file_data = data[len(f"FILE:{filename}:{filesize}:"):]
+    remaining = filesize - len(file_data)
+    
+    while remaining > 0:
+        chunk = conn.recv(min(4096, remaining))
+        file_data += chunk
+        remaining -= len(chunk)
+    
+    # Save file
+    with open(filename, 'wb') as f:
+        f.write(file_data)
+    
+    print(f"\r\033[KReceived file: {filename} ({filesize} bytes)")
 
 # function to run simulation (R script) from within chat
 def run_simulation(script, args):
@@ -214,6 +238,25 @@ def send_msg(
             break
         except KeyboardInterrupt:
             break
+
+# receive a file from the server
+def receive_file(data, msg, conn):
+    parts = msg.split(":", 3)
+    filename = parts[1]
+    filesize = int(parts[2])
+    
+    # Receive the file content
+    file_data = data[len(f"FILE:{filename}:{filesize}:"):]
+    remaining = filesize - len(file_data)
+    
+    while remaining > 0:
+        chunk = conn.recv(min(4096, remaining))
+        file_data += chunk
+        remaining -= len(chunk)
+    
+    # Save file
+    with open(filename, 'wb') as f:
+        f.write(file_data)
 
 # send file over socket
 def send_file(conn, filepath):

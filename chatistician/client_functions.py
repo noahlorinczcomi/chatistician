@@ -1,5 +1,6 @@
 import random
 from datetime import datetime
+import os
 
 # assign client ID
 def assign_client_id():
@@ -18,7 +19,8 @@ def receive_messages(
     client,
     colored_server_name,
     colored_client_name,
-    breakers
+    breakers,
+    file_prefix="FILE:"
 ):
     while True:
         try:
@@ -29,28 +31,11 @@ def receive_messages(
             msg = data.decode()
 
             # Check if it's a file transfer
-            if msg.startswith("FILE:"):
-                parts = msg.split(":", 3)
-                filename = parts[1]
-                filesize = int(parts[2])
-                
-                # Receive the file content
-                file_data = data[len(f"FILE:{filename}:{filesize}:"):]
-                remaining = filesize - len(file_data)
-                
-                while remaining > 0:
-                    chunk = client.recv(min(4096, remaining))
-                    file_data += chunk
-                    remaining -= len(chunk)
-                
-                # Save file
-                with open(filename, 'wb') as f:
-                    f.write(file_data)
-                
-                print(f"\r\033[KReceived file: {filename} ({filesize} bytes)")
+            if msg.startswith(file_prefix):
+                receive_file(data, msg, client)
                 print(f"{colored_client_name} ", end="", flush=True)
                 continue
-
+            
             # flush line before receiving, then re-prompt
             # \r\033[K flushes
             print(f"\r\033[K{colored_server_name} {msg}")
@@ -71,7 +56,12 @@ def send_messages(
     while True:
         try:
             msg = input(f"{colored_client_name} ")
-            client.sendall(msg.encode())
+            # check if wants to send a file
+            if msg.startswith("!get"):
+                filename = msg.split(" ")[1]
+                send_file(client, filename)
+            else:
+                client.sendall(msg.encode())
             if msg.lower() in breakers:
                 break
         except Exception as e:
@@ -82,29 +72,41 @@ def footer():
     return None
 
 # receive a file from the server
-def receive_file(client, save_path):
-    """Receive a file from the server"""
-    # get file size
-    data = client.recv(1024).decode()
-    if data.startswith("ERROR"):
-        print(data)
+def receive_file(data, msg, client):
+    parts = msg.split(":", 3)
+    filename = parts[1]
+    filesize = int(parts[2])
+    
+    # Receive the file content
+    file_data = data[len(f"FILE:{filename}:{filesize}:"):]
+    remaining = filesize - len(file_data)
+    
+    while remaining > 0:
+        chunk = client.recv(min(4096, remaining))
+        file_data += chunk
+        remaining -= len(chunk)
+    
+    # Save file
+    with open(filename, 'wb') as f:
+        f.write(file_data)
+    
+    print(f"\r\033[KReceived file: {filename} ({filesize} bytes)")
+
+# send file over socket
+def send_file(client, filepath):
+    """Send a file to the client"""
+    if not os.path.exists(filepath):
+        print("ERROR: File not found")
         return
 
-    filesize = int(data.split(":")[1])
-
-    # send acknowledgement
-    client.sendall(b"READY")
-
-    # receive file
-    received = 0
-    with open(save_path, "wb") as f:
-        while received < filesize:
-            chunk = client.recv(min(4096, filesize - received))
-            if not chunk:
-                break
-            f.write(chunk)
-            received += len(chunk)
+    filename = os.path.basename(filepath)
+    filesize = os.path.getsize(filepath)
     
-    # read completion message
-    client.recv(1024)
-    print(f"Received {save_path} ({filesize} bytes)")
+    # Send file header
+    client.sendall(f"FILE:{filename}:{filesize}:".encode())
+    
+    # Send file content immediately
+    with open(filepath, "rb") as f:
+        client.sendall(f.read())
+    
+    print(f"Sent {filepath}")
