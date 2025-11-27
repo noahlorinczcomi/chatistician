@@ -56,7 +56,11 @@ def receive_msg(
                 print(f"\n{colored_client_name} disconnected")
                 break # out of while loop
             msg = data.decode()
-            
+
+            # for handling file send logic
+            if msg in ['READY', 'FILE_COMPLETE']:
+                continue
+
             # flush line before receiving
             print(f"\r\033[K{colored_client_name} {msg}")
             persistent_header() # keeps help header at top of terminal
@@ -149,8 +153,8 @@ def parse_msg(
         return parsed
     
     if is_file:
-        print('file sharing not implemented yet')
-        return {}
+        filename = msg.split(" ", 1)[1] if len(msg.split(" ")) > 1 else ""
+        return {"message_type": "file", "filename": filename}
 
     if is_help:
         utils.server_header()
@@ -195,6 +199,9 @@ def send_msg(
                 )
                 print(sim_result)
                 conn.sendall(sim_result.encode())
+            elif parsed_msg['message_type'] == 'file':
+                filename = parsed_msg['filename']
+                send_file(conn, filename)
             
             persistent_header() # print help header after sending message
             
@@ -207,3 +214,23 @@ def send_msg(
             break
         except KeyboardInterrupt:
             break
+
+# send file over socket
+def send_file(conn, filepath):
+    """Send a file to the client"""
+    if not os.path.exists(filepath):
+        print("ERROR: File not found")
+        return
+
+    filename = os.path.basename(filepath)
+    filesize = os.path.getsize(filepath)
+    
+    # Send file header
+    conn.sendall(f"FILE:{filename}:{filesize}:".encode())
+    
+    # Send file content immediately
+    with open(filepath, "rb") as f:
+        conn.sendall(f.read())
+    
+    print(f"Sent {filepath}")
+
