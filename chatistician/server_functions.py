@@ -65,6 +65,7 @@ def receive_msg(
                 continue
 
             # flush line before sending
+            msg = data.decode()
             print(f"\r\033[K{colored_client_name} {msg}")
             persistent_header() # keeps help header at top of terminal
 
@@ -239,7 +240,7 @@ def send_msg(
         except KeyboardInterrupt:
             break
 
-# receive a file from the server
+# receive a file from the client
 def receive_file(data, msg, conn):
     parts = msg.split(":", 3)
     filename = parts[1]
@@ -257,6 +258,9 @@ def receive_file(data, msg, conn):
     # Save file
     with open(filename, 'wb') as f:
         f.write(file_data)
+    
+    print(f"\r\033[KReceived file: {filename} ({filesize} bytes)")
+
 
 # send file over socket
 def send_file(conn, filepath):
