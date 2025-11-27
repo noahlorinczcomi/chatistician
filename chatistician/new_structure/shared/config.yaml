@@ -1,0 +1,25 @@
+server:
+  host: 0.0.0.0
+  port: 5001
+
+client:
+  host: 159.89.178.145
+  port: 5001
+
+colors:
+  server: yellow
+  client: cyan
+
+specials:
+  breakers: ['quit', 'exit', 'bye', 'close', 'end', 'stop', 'kill', 'leave']
+
+commands:
+  prefix: "!"
+  help: ['help']
+  simulation: ['simulate', 'simulation']
+  file_send: ['share-code', 'send', 'share', 'upload', 'code review']
+  file_edit: ['edit-code', 'code', 'open', 'editor', 'edit', 'vim', 'micro', 'nano']
+
+settings:
+  max_connections: 10
+  timeout: 30
