@@ -18,7 +18,6 @@ def main():
     )
     args = parser.parse_args()
 
-    shared_banners.banner()
 
     # socket config
     config = shared_utils.load_config(args.config)
@@ -33,7 +32,10 @@ def main():
     client.connect((HOST, PORT))
     name = client_utils.assign_client_id()
     client.sendall(name.encode())
-    client_utils.welcome(name)
+
+    shared_utils.init_footer_config()
+    client_utils.print_welcome(name)
+    shared_banners.banner()
 
     # defining breaking criteria
     breakers = config['specials']['breakers']
@@ -50,7 +52,7 @@ def main():
     )
     send_thread = threading.Thread(
         target=client_functions.send_msg,
-        args=(client, colored_client_name, breakers)
+        args=(client, colored_client_name, breakers, args.config)
     )
 
     receive_thread.start()
@@ -61,9 +63,10 @@ def main():
     receive_thread.join()
 
     # will close once we break out of the loop
+    shared_utils.close_footer_config()
     client.close()
     print("Connection closed")
-
+    
     return
 
 if __name__ == "__main__":

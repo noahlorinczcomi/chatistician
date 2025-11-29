@@ -14,11 +14,12 @@ specials:
   breakers: ['quit', 'exit', 'bye', 'close', 'end', 'stop', 'kill', 'leave']
 
 commands:
-  prefix: "!"
+  cmd_prefix: "!"
+  os_prefix: "$"
   help: ['help']
   simulation: ['simulate', 'simulation']
-  file_send: ['share-code', 'send', 'share', 'upload', 'code review']
-  file_edit: ['edit-code', 'code', 'open', 'editor', 'edit', 'vim', 'micro', 'nano']
+  share_code: ['share-code', 'send', 'share', 'upload', 'code review']
+  review_code: ['review-code', 'review', 'code', 'open', 'editor', 'edit', 'vim', 'micro', 'nano']
 
 settings:
   max_connections: 10

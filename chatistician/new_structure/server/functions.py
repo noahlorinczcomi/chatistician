@@ -1,6 +1,6 @@
 import os
-from shared import utils as shared_utils # will look in repo root
-from server import utils as server_utils
+from shared import utils as shared_utils
+from shared import simulations
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Message handling
@@ -28,9 +28,10 @@ def receive_msg(
                 continue
 
             # flush line before sending
-            msg = data.decode()
+            # \r\033[K flushes
             print(f"\r\033[K{colored_client_name} {msg}")
-            shared_utils.persistent_header() # keeps help header at top of terminal
+            # shared_utils.persistent_header() # print help header after sending message
+            shared_utils.persistent_footer() # print help footer after sending message
 
             # re-prompt the server
             print(f"{colored_server_name} ", end="", flush=True)
@@ -66,7 +67,7 @@ def send_msg(
             elif parsed_msg['message_type'] == 'chat':
                 conn.sendall(msg.encode())
             elif parsed_msg['message_type'] == 'simulation':
-                sim_result = server_utils.run_simulation(
+                sim_result = simulations.run_simulation(
                     script=parsed_msg['script'],
                     args=parsed_msg['args']
                 )
@@ -76,7 +77,8 @@ def send_msg(
                 filename = parsed_msg['filename']
                 send_file(conn, filename)
             
-            shared_utils.persistent_header() # print help header after sending message
+            # shared_utils.persistent_header() # print help header after sending message
+            shared_utils.persistent_footer() # print help footer after sending message
             
             if msg.lower() in breakers:
                 conn.close()
@@ -110,6 +112,8 @@ def receive_file(data, msg, conn):
         f.write(file_data)
     
     print(f"\r\033[KReceived file: {filename} ({filesize} bytes)")
+    # shared_utils.persistent_header() # print help header after sending message
+    shared_utils.persistent_footer() # print help footer after sending message
 
 # receive a file from the client
 def receive_file(data, msg, conn):
@@ -131,6 +135,8 @@ def receive_file(data, msg, conn):
         f.write(file_data)
     
     print(f"\r\033[KReceived file: {filename} ({filesize} bytes)")
+    # shared_utils.persistent_header() # print help header after sending message
+    shared_utils.persistent_footer() # print help footer after sending message
 
 # send file over socket
 def send_file(conn, filepath):
@@ -150,4 +156,5 @@ def send_file(conn, filepath):
         conn.sendall(f.read())
     
     print(f"Sent {filepath}")
-
+    # shared_utils.persistent_header() # print help header after sending message
+    shared_utils.persistent_footer() # print help footer after sending message

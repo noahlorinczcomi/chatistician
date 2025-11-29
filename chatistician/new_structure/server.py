@@ -31,6 +31,9 @@ def main():
     server.bind((HOST, PORT))
     server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # let us reuse the port immediately
     server.listen(int(config['settings']['max_connections']))
+    
+    shared_utils.init_footer_config()
+    shared_utils.persistent_footer()
 
     # connect server socket to HOST:PORT and receive client ID
     print("Waiting for client")
@@ -65,6 +68,7 @@ def main():
     receive_thread.join()
 
     # close server entirely
+    shared_utils.close_footer_config()
     conn.close()
     server.close()
     print("Connection closed")

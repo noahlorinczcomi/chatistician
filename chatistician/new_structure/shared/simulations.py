@@ -1,6 +1,5 @@
 import os
 import subprocess
-from server import utils as server_utils
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # for running simulations
@@ -16,7 +15,7 @@ def parse_simulation(msg):
     script_start = clean_msg.index('{') + 1
     script_end = clean_msg.index('}')
     sim_type = clean_msg[script_start:script_end]
-    script = server_utils.match_sim_to_script(sim_type)
+    script = match_sim_to_script(sim_type)
     args = clean_msg[(script_end + 2):]
     
     return script, args
@@ -30,6 +29,18 @@ def match_sim_to_script(sim_name):
     paired_subs = ['paired', 'pair', 'repeated', 'matched']
     is_paired = any(s in sim_name for s in paired_subs)
     
+    # linear regression
+    
+
+    # logistic regression
+
+
+    # DEG testing
+
+
+    # Mendelian Randomization
+
+
     # other simulation types ...
     available_scripts = os.listdir('power_analysis')
     script = f"ERROR: simulation type not found. Options are: {', '.join(available_scripts)}"
