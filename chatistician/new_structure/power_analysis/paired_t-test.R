@@ -19,6 +19,7 @@ alpha = opts$`type-1`
 n = opts$n
 variance_pre = opts$`variance-pre`
 variance_post = opts$`variance-post`
+sd_diff = sqrt(variance_pre + variance_post - 2*rho*sqrt(variance_pre*variance_post))
 rho = opts$correlation
 D = diag(sqrt(c(variance_pre, variance_post)))
 R = matrix(c(1, rho, rho, 1), 2, 2)
@@ -27,11 +28,12 @@ Sigma = D %*% R %*% D
 l = 40
 results = c()
 for(i in 1:length(ds)) {
+    mean_diff = ds[i] * sd_diff
     r = c()
     for(iter in 1:k) {
         setTxtProgressBar(pb, s)
         # draw raw data
-        X = MASS::mvrnorm(n, c(0, ds[i]), Sigma)
+        X = MASS::mvrnorm(n, c(0, mean_diff), Sigma)
         fit = t.test(X[,1], X[,2], paired=TRUE)
         r[iter] = fit$p.value < alpha
     }

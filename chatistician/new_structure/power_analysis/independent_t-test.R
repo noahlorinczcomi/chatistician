@@ -19,6 +19,7 @@ n2 = opts$n2
 
 sigma2_1 = opts$`variance-1`
 sigma2_2 = opts$`variance-2`
+pooled_sd = sqrt((sigma2_1 + sigma2_2) / 2)
 
 l = 40
 results = c()
@@ -27,7 +28,7 @@ for(i in 1:length(ds)) {
     for(iter in 1:k) {
         # draw raw data
         x1 = rnorm(n1, 0, sqrt(sigma2_1))
-        x2 = rnorm(n2, ds[i], sqrt(sigma2_2))
+        x2 = rnorm(n2, ds[i] * pooled_sd, sqrt(sigma2_2))
         # perform t-test
         fit = t.test(x1, x2, var.equal=sigma2_1 == sigma2_2)
         r[iter] = fit$p.value < alpha

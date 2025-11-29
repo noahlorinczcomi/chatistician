@@ -1,0 +1,34 @@
+[User11292541410]Run !help to view the command palette                                              [User11292541410]
+[Chatistician] ei
+Run !help to view the command palette                                              [User11292541410] 
+[Chatistician] a
+Run !help to view the command palette                                              [User11292541410] 
+[Chatistician] e
+Run !help to view the command palette                                              [User11292541410] 
+View this help message.
++ COMMAND:  !help
++ EXAMPLE:  !help
+
+Perform power analysis using simulation.
++ COMMAND:  !simulate {<statistical test>} <simulation parameters>
++ EXAMPLE:  !simulate {paired t test} -n 20
++ HELP:     !simulate help
+
+Share a data analysis code file.
++ COMMAND:  !share-code <path/file.extension>
++ EXAMPLE:  !share-code ./file.R
++ HELP:     !share-code help
+
+Review a data analysis code file.
++ COMMAND:  !review-code <path/file.extension>
++ EXAMPLE:  !review-code ./file.R
++ HELP:     !review-code help
+
+Interact with the local system.
++ COMMAND:  $<UNIX command>
++ EXAMPLE:  $ls -la
++ EXAMPLE:  $tmux attach -t private_session
++ EXAMPLE:  $mv code/file.R ./file.R
++ HELP:     $help
+    
+Run !help to view the command palette                                              [User11292541410]Run !help to view the command palette                                              

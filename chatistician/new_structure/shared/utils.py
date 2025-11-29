@@ -73,13 +73,7 @@ def persistent_footer(
         config = yaml.safe_load(file)
     command_prefix = config['commands']['cmd_prefix']
     text = f"Run {command_prefix}help to view the command palette"
-    # text = "Commands: "
-    # for val in config['commands'].values():
-    #     if val == command_prefix:
-    #         continue
-    #     text = text + f"{command_prefix}{val[0]}, "
-    # text = text + f"{config['commands']['os_prefix']}<OS command>."
-    # text = text + r". Try '!{command} help'."
+    
     # Get terminal size
     cols, rows = shutil.get_terminal_size()
 

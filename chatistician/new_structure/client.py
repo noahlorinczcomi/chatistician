@@ -18,7 +18,6 @@ def main():
     )
     args = parser.parse_args()
 
-
     # socket config
     config = shared_utils.load_config(args.config)
 
@@ -36,6 +35,7 @@ def main():
     shared_utils.init_footer_config()
     client_utils.print_welcome(name)
     shared_banners.banner()
+    # log_file, log_filename = client_utils.open_log(name, config) # start log file
 
     # defining breaking criteria
     breakers = config['specials']['breakers']
@@ -63,6 +63,7 @@ def main():
     receive_thread.join()
 
     # will close once we break out of the loop
+    # client_utils.close_log(log_file, log_filename)
     shared_utils.close_footer_config()
     client.close()
     print("Connection closed")
